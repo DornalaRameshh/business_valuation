@@ -146,12 +146,32 @@ export const apiService = {
     formData.append('userID', userID);
     formData.append('file', file);
 
-    const response = await api.post<UploadResponse>('/upload-document', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
+    try {
+      const response = await api.post<UploadResponse>('/upload-document', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      // If Axios fails due to CORS, try native fetch
+      if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+        console.log('Axios upload failed, trying native fetch...');
+        const response = await fetch(`${API_BASE_URL}/upload-document`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+        return data.data || data;
+      }
+      throw error;
+    }
   },
 
   async getRecommendations(data: RecommendRequest): Promise<RecommendResponse> {
