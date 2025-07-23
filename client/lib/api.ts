@@ -117,7 +117,28 @@ export const apiService = {
   },
 
   async saveInput(data: SaveInputRequest): Promise<void> {
-    await api.post('/save-input', data);
+    try {
+      await api.post('/save-input', data);
+    } catch (error: any) {
+      // If Axios fails due to CORS, try native fetch
+      if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+        console.log('Axios failed, trying native fetch...');
+        const response = await fetch(`${API_BASE_URL}/save-input`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        return;
+      }
+      throw error;
+    }
   },
 
   async uploadDocument(userID: string, file: File): Promise<UploadResponse> {
