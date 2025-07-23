@@ -8,7 +8,6 @@ import { FileUpload } from './FileUpload';
 import { StartupInfoForm } from './StartupInfoForm';
 import { AIRecommendation } from './AIRecommendation';
 import { ValuationCalculation } from './ValuationCalculation';
-import { ApiTest } from './ApiTest';
 import { StartupInput, UploadResponse, RecommendResponse, CalculateResponse } from '@/lib/api';
 
 interface AppState {
