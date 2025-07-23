@@ -8,6 +8,8 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Add CORS handling
+  withCredentials: false,
 });
 
 // Add request interceptor for debugging
