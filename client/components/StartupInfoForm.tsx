@@ -79,6 +79,11 @@ export function StartupInfoForm({ userID, onSubmitSuccess, onSubmitError }: Star
     setError('');
 
     try {
+      // First test the connection
+      console.log('Testing API connection...');
+      const canConnect = await apiService.testConnection();
+      console.log('Connection test result:', canConnect);
+
       const startupInput: StartupInput = {
         ...data,
         // Convert string values to numbers where needed
@@ -90,6 +95,8 @@ export function StartupInfoForm({ userID, onSubmitSuccess, onSubmitError }: Star
         burnRate: data.burnRate || undefined,
         growthRate: data.growthRate || undefined,
       };
+
+      console.log('Submitting data:', { userID, currentInput: startupInput });
 
       await apiService.saveInput({
         userID,
@@ -104,7 +111,22 @@ export function StartupInfoForm({ userID, onSubmitSuccess, onSubmitError }: Star
       console.error('Error status:', err.response?.status);
       console.error('Error data:', err.response?.data);
 
-      const errorMessage = err.response?.data?.message || err.message || 'Failed to save startup information. Please try again.';
+      let errorMessage = 'Failed to save startup information. Please try again.';
+
+      if (err.code === 'NETWORK_ERROR' || err.message?.includes('Network Error')) {
+        errorMessage = 'Network error: Please check your internet connection and try again.';
+      } else if (err.response?.status === 404) {
+        errorMessage = 'API endpoint not found. Please contact support.';
+      } else if (err.response?.status === 500) {
+        errorMessage = 'Server error. Please try again later.';
+      } else if (err.response?.status === 403) {
+        errorMessage = 'Access denied. Please check your permissions.';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = `Error: ${err.message}`;
+      }
+
       setError(errorMessage);
       onSubmitError(errorMessage);
     } finally {
