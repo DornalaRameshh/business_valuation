@@ -136,17 +136,6 @@ export function ValuationApp() {
           </CardContent>
         </Card>
 
-        {/* Debug Card */}
-        <Card className="border-orange-200 bg-orange-50">
-          <CardContent className="p-4">
-            <h3 className="font-medium text-orange-800 mb-2">Debug Mode</h3>
-            <p className="text-sm text-orange-700 mb-3">
-              Use this to test API connectivity and diagnose form submission issues.
-            </p>
-            <ApiTest />
-          </CardContent>
-        </Card>
-
         {/* Main Content */}
         <Tabs value={state.currentStep.toString()} className="w-full">
           <TabsList className="grid w-full grid-cols-4">
