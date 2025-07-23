@@ -98,7 +98,13 @@ export function StartupInfoForm({ userID, onSubmitSuccess, onSubmitError }: Star
 
       onSubmitSuccess(startupInput);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to save startup information. Please try again.';
+      console.error('Form submission error:', err);
+      console.error('Error response:', err.response);
+      console.error('Error message:', err.message);
+      console.error('Error status:', err.response?.status);
+      console.error('Error data:', err.response?.data);
+
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to save startup information. Please try again.';
       setError(errorMessage);
       onSubmitError(errorMessage);
     } finally {
