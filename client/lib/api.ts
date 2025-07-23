@@ -175,13 +175,57 @@ export const apiService = {
   },
 
   async getRecommendations(data: RecommendRequest): Promise<RecommendResponse> {
-    const response = await api.post<RecommendResponse>('/recommend', data);
-    return response.data;
+    try {
+      const response = await api.post<RecommendResponse>('/recommend', data);
+      return response.data;
+    } catch (error: any) {
+      if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+        console.log('Axios recommend failed, trying native fetch...');
+        const response = await fetch(`${API_BASE_URL}/recommend`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        const result = await response.json();
+        return result.data || result;
+      }
+      throw error;
+    }
   },
 
   async calculateValuation(data: CalculateRequest): Promise<CalculateResponse> {
-    const response = await api.post<CalculateResponse>('/calculate', data);
-    return response.data;
+    try {
+      const response = await api.post<CalculateResponse>('/calculate', data);
+      return response.data;
+    } catch (error: any) {
+      if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+        console.log('Axios calculate failed, trying native fetch...');
+        const response = await fetch(`${API_BASE_URL}/calculate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        const result = await response.json();
+        return result.data || result;
+      }
+      throw error;
+    }
   },
 };
 
