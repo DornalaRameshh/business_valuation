@@ -97,6 +97,23 @@ export interface CalculateResponse {
 }
 
 export const apiService = {
+  async testConnection(): Promise<boolean> {
+    try {
+      // Try a simple request to test connectivity
+      const response = await fetch(`${API_BASE_URL}/save-input`, {
+        method: 'OPTIONS',
+        headers: {
+          'Origin': window.location.origin,
+        },
+      });
+      console.log('CORS preflight test:', response.status);
+      return true;
+    } catch (error) {
+      console.error('Connection test failed:', error);
+      return false;
+    }
+  },
+
   async saveInput(data: SaveInputRequest): Promise<void> {
     await api.post('/save-input', data);
   },
