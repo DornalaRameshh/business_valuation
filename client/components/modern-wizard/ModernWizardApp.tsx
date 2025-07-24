@@ -255,7 +255,7 @@ export function ModernWizardApp() {
             <div className="flex items-center space-x-4">
               <span>🔒 Your data is secure and private</span>
               <span>•</span>
-              <span>��� Auto-saved as you go</span>
+              <span>⚡ Auto-saved as you go</span>
             </div>
             
             <button
@@ -267,6 +267,9 @@ export function ModernWizardApp() {
           </div>
         </div>
       </div>
+
+      {/* Backend Configuration */}
+      <BackendConfig onBackendChange={handleBackendChange} />
     </div>
   );
 }
