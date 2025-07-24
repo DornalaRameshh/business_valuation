@@ -136,45 +136,64 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
 
   const getSummaryStats = () => {
     const stats = [];
-    
+
     if (wizardData.step1?.businessName) {
-      stats.push({ 
-        icon: FileText, 
-        label: 'Business', 
+      stats.push({
+        icon: FileText,
+        label: 'Business',
         value: wizardData.step1.businessName,
         color: 'text-blue-600'
       });
     }
 
     if (wizardData.step1?.industry) {
-      stats.push({ 
-        icon: Target, 
-        label: 'Industry', 
+      stats.push({
+        icon: Target,
+        label: 'Industry',
         value: wizardData.step1.industry.charAt(0).toUpperCase() + wizardData.step1.industry.slice(1),
         color: 'text-purple-600'
       });
     }
 
     if (wizardData.step2?.revenue && wizardData.step2.revenue > 0) {
-      stats.push({ 
-        icon: DollarSign, 
-        label: 'Revenue', 
+      stats.push({
+        icon: DollarSign,
+        label: 'Revenue',
         value: formatCurrency(wizardData.step2.revenue),
         color: 'text-green-600'
       });
     }
 
     if (wizardData.step3?.customerCount && wizardData.step3.customerCount > 0) {
-      stats.push({ 
-        icon: Users, 
-        label: 'Customers', 
+      stats.push({
+        icon: Users,
+        label: 'Customers',
         value: wizardData.step3.customerCount.toLocaleString(),
         color: 'text-orange-600'
       });
     }
 
+    // Add valuation methods count if available
+    if (valuationReport?.calculations?.length) {
+      stats.push({
+        icon: BarChart3,
+        label: 'Methods',
+        value: `${valuationReport.calculations.length} analyses`,
+        color: 'text-indigo-600'
+      });
+    }
+
     return stats;
   };
+
+  const getAnalysisStages = () => [
+    'Analyzing business model...',
+    'Identifying valuation methods...',
+    'Performing detailed calculations...',
+    'Analyzing competitors...',
+    'Generating strategic insights...',
+    'Finalizing valuation report...'
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -195,7 +214,7 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
           </motion.div>
           
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            �� You're all set!
+            🎉 You're all set!
           </h1>
           <p className="text-xl text-gray-600">
             Your startup valuation is being generated using AI analysis
