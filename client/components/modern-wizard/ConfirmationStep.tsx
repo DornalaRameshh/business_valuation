@@ -441,28 +441,34 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
         >
           <button
             onClick={() => {
-              // Mock download functionality
-              const data = {
-                valuation: mockValuation,
-                confidence: confidence,
-                timestamp: new Date().toISOString(),
+              if (!valuationReport) return;
+
+              const reportData = {
                 businessName: wizardData.step1?.businessName,
-                ...wizardData
+                generatedAt: new Date().toISOString(),
+                confidence: confidence,
+                inputData: wizardData,
+                valuationReport: valuationReport,
+                summary: {
+                  finalRange: valuationReport.finalValuation.finalRange,
+                  methodsUsed: valuationReport.calculations.length,
+                  stageAssessment: valuationReport.businessSummary.stageAssessment
+                }
               };
-              
-              const blob = new Blob([JSON.stringify(data, null, 2)], {
+
+              const blob = new Blob([JSON.stringify(reportData, null, 2)], {
                 type: 'application/json'
               });
               const url = URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
-              a.download = `${wizardData.step1?.businessName || 'startup'}-valuation.json`;
+              a.download = `${wizardData.step1?.businessName || 'startup'}-valuation-report.json`;
               document.body.appendChild(a);
               a.click();
               document.body.removeChild(a);
               URL.revokeObjectURL(url);
             }}
-            disabled={isGenerating}
+            disabled={isGenerating || error || !valuationReport}
             className="wizard-button-primary flex items-center justify-center space-x-2 py-3 px-6 text-lg font-semibold"
           >
             <Download className="w-5 h-5" />
