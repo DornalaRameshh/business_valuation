@@ -59,22 +59,22 @@ export default {
         },
         wizard: {
           blue: {
-            50: '#eff6ff',
-            100: '#dbeafe',
-            500: '#3b82f6',
-            600: '#2563eb',
+            50: "#eff6ff",
+            100: "#dbeafe",
+            500: "#3b82f6",
+            600: "#2563eb",
           },
           green: {
-            50: '#f0fdf4',
-            100: '#dcfce7',
-            500: '#22c55e',
-            600: '#16a34a',
+            50: "#f0fdf4",
+            100: "#dcfce7",
+            500: "#22c55e",
+            600: "#16a34a",
           },
           purple: {
-            50: '#faf5ff',
-            100: '#f3e8ff',
-            500: '#a855f7',
-            600: '#9333ea',
+            50: "#faf5ff",
+            100: "#f3e8ff",
+            500: "#a855f7",
+            600: "#9333ea",
           },
         },
       },
@@ -100,7 +100,7 @@ export default {
             height: "0",
           },
         },
-        "float": {
+        float: {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-10px)" },
         },
@@ -125,7 +125,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "float": "float 6s ease-in-out infinite",
+        float: "float 6s ease-in-out infinite",
         "float-delayed": "float 6s ease-in-out infinite 2s",
         "gentle-bounce": "gentle-bounce 2s ease-in-out",
         "pulse-dot": "pulse-dot 2s infinite",

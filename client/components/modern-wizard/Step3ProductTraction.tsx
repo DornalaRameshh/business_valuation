@@ -1,13 +1,27 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { TrendingUp, ArrowLeft, Users, Zap, HelpCircle, ChevronDown, Search } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  TrendingUp,
+  ArrowLeft,
+  Users,
+  Zap,
+  HelpCircle,
+  ChevronDown,
+  Search,
+} from "lucide-react";
 
 const formSchema = z.object({
-  customerCount: z.coerce.number().min(0, 'Customer count must be 0 or greater').optional(),
-  growthRate: z.coerce.number().min(0, 'Growth rate must be 0 or greater').optional(),
+  customerCount: z.coerce
+    .number()
+    .min(0, "Customer count must be 0 or greater")
+    .optional(),
+  growthRate: z.coerce
+    .number()
+    .min(0, "Growth rate must be 0 or greater")
+    .optional(),
   growthPeriod: z.string().optional(),
   uniqueValue: z.string().optional(),
   competitors: z.string().optional(),
@@ -24,15 +38,43 @@ interface Step3Props {
 }
 
 const growthPeriods = [
-  { value: 'monthly', label: 'Monthly', description: 'Month-over-month growth' },
-  { value: 'quarterly', label: 'Quarterly', description: 'Quarter-over-quarter growth' },
-  { value: 'yearly', label: 'Yearly', description: 'Year-over-year growth' },
+  {
+    value: "monthly",
+    label: "Monthly",
+    description: "Month-over-month growth",
+  },
+  {
+    value: "quarterly",
+    label: "Quarterly",
+    description: "Quarter-over-quarter growth",
+  },
+  { value: "yearly", label: "Yearly", description: "Year-over-year growth" },
 ];
 
 const commonCompetitors = [
-  'Salesforce', 'HubSpot', 'Slack', 'Zoom', 'Shopify', 'Square', 'Stripe', 'Mailchimp',
-  'Canva', 'Figma', 'Notion', 'Airtable', 'Monday.com', 'Asana', 'Trello', 'GitLab',
-  'GitHub', 'AWS', 'Google Cloud', 'Microsoft Azure', 'Dropbox', 'Box', 'Adobe',
+  "Salesforce",
+  "HubSpot",
+  "Slack",
+  "Zoom",
+  "Shopify",
+  "Square",
+  "Stripe",
+  "Mailchimp",
+  "Canva",
+  "Figma",
+  "Notion",
+  "Airtable",
+  "Monday.com",
+  "Asana",
+  "Trello",
+  "GitLab",
+  "GitHub",
+  "AWS",
+  "Google Cloud",
+  "Microsoft Azure",
+  "Dropbox",
+  "Box",
+  "Adobe",
 ];
 
 const placeholderTexts = {
@@ -45,11 +87,17 @@ const placeholderTexts = {
   ],
 };
 
-export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: Step3Props) {
+export function Step3ProductTraction({
+  onNext,
+  onBack,
+  initialData,
+  onSave,
+}: Step3Props) {
   const [skipMode, setSkipMode] = useState(initialData?.skipTraction || false);
   const [showGrowthDropdown, setShowGrowthDropdown] = useState(false);
-  const [competitorSearch, setCompetitorSearch] = useState('');
-  const [showCompetitorSuggestions, setShowCompetitorSuggestions] = useState(false);
+  const [competitorSearch, setCompetitorSearch] = useState("");
+  const [showCompetitorSuggestions, setShowCompetitorSuggestions] =
+    useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
 
   const {
@@ -57,22 +105,24 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
     handleSubmit,
     setValue,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       customerCount: initialData?.customerCount || undefined,
       growthRate: initialData?.growthRate || undefined,
-      growthPeriod: initialData?.growthPeriod || 'monthly',
-      uniqueValue: initialData?.uniqueValue || '',
-      competitors: initialData?.competitors || '',
+      growthPeriod: initialData?.growthPeriod || "monthly",
+      uniqueValue: initialData?.uniqueValue || "",
+      competitors: initialData?.competitors || "",
       skipTraction: initialData?.skipTraction || false,
     },
-    mode: 'onChange'
+    mode: "onChange",
   });
 
   const watchedValues = watch();
-  const selectedGrowthPeriod = growthPeriods.find(p => p.value === watchedValues.growthPeriod);
+  const selectedGrowthPeriod = growthPeriods.find(
+    (p) => p.value === watchedValues.growthPeriod,
+  );
 
   // Autosave functionality
   useEffect(() => {
@@ -88,7 +138,9 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
   // Rotate placeholder text
   useEffect(() => {
     const interval = setInterval(() => {
-      setPlaceholderIndex((prev) => (prev + 1) % placeholderTexts.uniqueValue.length);
+      setPlaceholderIndex(
+        (prev) => (prev + 1) % placeholderTexts.uniqueValue.length,
+      );
     }, 3000);
 
     return () => clearInterval(interval);
@@ -104,32 +156,37 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
 
   const handleSkipToggle = () => {
     setSkipMode(!skipMode);
-    setValue('skipTraction', !skipMode);
+    setValue("skipTraction", !skipMode);
   };
 
-  const handleGrowthPeriodSelect = (period: typeof growthPeriods[0]) => {
-    setValue('growthPeriod', period.value, { shouldValidate: true });
+  const handleGrowthPeriodSelect = (period: (typeof growthPeriods)[0]) => {
+    setValue("growthPeriod", period.value, { shouldValidate: true });
     setShowGrowthDropdown(false);
   };
 
   const handleCompetitorSelect = (competitor: string) => {
-    const currentCompetitors = watchedValues.competitors || '';
-    const competitorList = currentCompetitors.split(',').map(c => c.trim()).filter(c => c);
-    
+    const currentCompetitors = watchedValues.competitors || "";
+    const competitorList = currentCompetitors
+      .split(",")
+      .map((c) => c.trim())
+      .filter((c) => c);
+
     if (!competitorList.includes(competitor)) {
-      const newValue = competitorList.length > 0 
-        ? `${currentCompetitors}, ${competitor}`
-        : competitor;
-      setValue('competitors', newValue);
+      const newValue =
+        competitorList.length > 0
+          ? `${currentCompetitors}, ${competitor}`
+          : competitor;
+      setValue("competitors", newValue);
     }
-    
-    setCompetitorSearch('');
+
+    setCompetitorSearch("");
     setShowCompetitorSuggestions(false);
   };
 
-  const filteredCompetitors = commonCompetitors.filter(comp =>
-    comp.toLowerCase().includes(competitorSearch.toLowerCase()) &&
-    !watchedValues.competitors?.includes(comp)
+  const filteredCompetitors = commonCompetitors.filter(
+    (comp) =>
+      comp.toLowerCase().includes(competitorSearch.toLowerCase()) &&
+      !watchedValues.competitors?.includes(comp),
   );
 
   const formatNumber = (value: number) => {
@@ -151,7 +208,7 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
           >
             <TrendingUp className="w-8 h-8 text-white" />
@@ -180,11 +237,11 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
               onClick={handleSkipToggle}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 skipMode
-                  ? 'bg-purple-200 text-purple-800'
-                  : 'bg-white text-purple-700 border border-purple-200'
+                  ? "bg-purple-200 text-purple-800"
+                  : "bg-white text-purple-700 border border-purple-200"
               }`}
             >
-              {skipMode ? 'Fill Details' : 'Skip This Step'}
+              {skipMode ? "Fill Details" : "Skip This Step"}
             </button>
           </div>
         </div>
@@ -194,7 +251,7 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
             {!skipMode && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="space-y-6"
               >
@@ -211,14 +268,14 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                     <button
                       type="button"
                       className="skip-button text-xs"
-                      onClick={() => setValue('customerCount', undefined)}
+                      onClick={() => setValue("customerCount", undefined)}
                     >
                       I don't know
                     </button>
                   </div>
                   <div className="relative">
                     <input
-                      {...register('customerCount')}
+                      {...register("customerCount")}
                       type="number"
                       placeholder="e.g., 1,500"
                       className="wizard-input w-full"
@@ -230,7 +287,8 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                     )}
                   </div>
                   <p className="text-xs text-gray-500">
-                    Include free users, paying customers, beta testers - any meaningful engagement
+                    Include free users, paying customers, beta testers - any
+                    meaningful engagement
                   </p>
                   {errors.customerCount && (
                     <motion.p
@@ -254,34 +312,44 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                       type="button"
                       className="skip-button text-xs"
                       onClick={() => {
-                        setValue('growthRate', undefined);
-                        setValue('growthPeriod', undefined);
+                        setValue("growthRate", undefined);
+                        setValue("growthPeriod", undefined);
                       }}
                     >
                       Skip for now
                     </button>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <div className="relative">
                       <input
-                        {...register('growthRate')}
+                        {...register("growthRate")}
                         type="number"
                         step="0.1"
                         placeholder="5"
                         className="wizard-input w-full pr-8"
                       />
-                      <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                      <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        %
+                      </span>
                     </div>
-                    
+
                     <div className="relative">
                       <button
                         type="button"
-                        onClick={() => setShowGrowthDropdown(!showGrowthDropdown)}
+                        onClick={() =>
+                          setShowGrowthDropdown(!showGrowthDropdown)
+                        }
                         className="wizard-input w-full flex items-center justify-between"
                       >
-                        <span className={selectedGrowthPeriod ? 'text-gray-900' : 'text-gray-500'}>
-                          {selectedGrowthPeriod?.label || 'Period'}
+                        <span
+                          className={
+                            selectedGrowthPeriod
+                              ? "text-gray-900"
+                              : "text-gray-500"
+                          }
+                        >
+                          {selectedGrowthPeriod?.label || "Period"}
                         </span>
                         <ChevronDown className="w-4 h-4 text-gray-400" />
                       </button>
@@ -301,8 +369,12 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                                 onClick={() => handleGrowthPeriodSelect(period)}
                                 className="w-full flex flex-col items-start px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                               >
-                                <span className="font-medium text-gray-900">{period.label}</span>
-                                <span className="text-xs text-gray-600">{period.description}</span>
+                                <span className="font-medium text-gray-900">
+                                  {period.label}
+                                </span>
+                                <span className="text-xs text-gray-600">
+                                  {period.description}
+                                </span>
                               </button>
                             ))}
                           </motion.div>
@@ -310,7 +382,7 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                       </AnimatePresence>
                     </div>
                   </div>
-                  
+
                   <p className="text-xs text-gray-500">
                     Rough estimate is fine! This helps us project your potential
                   </p>
@@ -335,7 +407,7 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                     <button
                       type="button"
                       className="skip-button text-xs"
-                      onClick={() => setValue('uniqueValue', '')}
+                      onClick={() => setValue("uniqueValue", "")}
                     >
                       Skip for now
                     </button>
@@ -344,12 +416,13 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                     key={placeholderIndex}
                     initial={{ opacity: 0.7 }}
                     animate={{ opacity: 1 }}
-                    {...register('uniqueValue')}
+                    {...register("uniqueValue")}
                     placeholder={placeholderTexts.uniqueValue[placeholderIndex]}
                     className="wizard-input w-full h-24 resize-none"
                   />
                   <p className="text-xs text-gray-500">
-                    Your secret sauce - what problem do you solve better than anyone else?
+                    Your secret sauce - what problem do you solve better than
+                    anyone else?
                   </p>
                 </div>
 
@@ -362,12 +435,12 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                     <button
                       type="button"
                       className="skip-button text-xs"
-                      onClick={() => setValue('competitors', '')}
+                      onClick={() => setValue("competitors", "")}
                     >
                       Skip for now
                     </button>
                   </div>
-                  
+
                   <div className="relative">
                     <div className="relative">
                       <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -384,36 +457,43 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                     </div>
 
                     <AnimatePresence>
-                      {showCompetitorSuggestions && competitorSearch && filteredCompetitors.length > 0 && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-2xl shadow-lg z-50 max-h-40 overflow-y-auto"
-                        >
-                          {filteredCompetitors.slice(0, 5).map((competitor) => (
-                            <button
-                              key={competitor}
-                              type="button"
-                              onClick={() => handleCompetitorSelect(competitor)}
-                              className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
-                            >
-                              {competitor}
-                            </button>
-                          ))}
-                        </motion.div>
-                      )}
+                      {showCompetitorSuggestions &&
+                        competitorSearch &&
+                        filteredCompetitors.length > 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-2xl shadow-lg z-50 max-h-40 overflow-y-auto"
+                          >
+                            {filteredCompetitors
+                              .slice(0, 5)
+                              .map((competitor) => (
+                                <button
+                                  key={competitor}
+                                  type="button"
+                                  onClick={() =>
+                                    handleCompetitorSelect(competitor)
+                                  }
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
+                                >
+                                  {competitor}
+                                </button>
+                              ))}
+                          </motion.div>
+                        )}
                     </AnimatePresence>
                   </div>
 
                   <textarea
-                    {...register('competitors')}
+                    {...register("competitors")}
                     placeholder="e.g., Salesforce, HubSpot, or describe similar companies..."
                     className="wizard-input w-full h-20 resize-none"
                   />
-                  
+
                   <p className="text-xs text-gray-500">
-                    Direct competitors, similar companies, or alternatives customers might consider
+                    Direct competitors, similar companies, or alternatives
+                    customers might consider
                   </p>
                 </div>
               </motion.div>
@@ -430,7 +510,8 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
                 <Zap className="w-6 h-6 text-purple-600" />
               </div>
               <p className="text-gray-600">
-                Perfect! We'll focus on your industry potential and stage-based metrics.
+                Perfect! We'll focus on your industry potential and stage-based
+                metrics.
               </p>
             </motion.div>
           )}
@@ -447,7 +528,7 @@ export function Step3ProductTraction({ onNext, onBack, initialData, onSave }: St
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
             </motion.button>
-            
+
             <motion.button
               type="submit"
               whileHover={{ scale: 1.02 }}

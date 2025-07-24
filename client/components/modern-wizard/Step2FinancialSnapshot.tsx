@@ -1,16 +1,32 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { DollarSign, ArrowLeft, HelpCircle, Eye, EyeOff, TrendingUp } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  DollarSign,
+  ArrowLeft,
+  HelpCircle,
+  Eye,
+  EyeOff,
+  TrendingUp,
+} from "lucide-react";
 
 const formSchema = z.object({
-  revenue: z.coerce.number().min(0, 'Revenue must be 0 or greater').optional(),
-  monthlyBurnRate: z.coerce.number().min(0, 'Burn rate must be 0 or greater').optional(),
+  revenue: z.coerce.number().min(0, "Revenue must be 0 or greater").optional(),
+  monthlyBurnRate: z.coerce
+    .number()
+    .min(0, "Burn rate must be 0 or greater")
+    .optional(),
   netProfitLoss: z.coerce.number().optional(),
-  fundingRaised: z.coerce.number().min(0, 'Funding raised must be 0 or greater').optional(),
-  planningToRaise: z.coerce.number().min(0, 'Amount to raise must be 0 or greater').optional(),
+  fundingRaised: z.coerce
+    .number()
+    .min(0, "Funding raised must be 0 or greater")
+    .optional(),
+  planningToRaise: z.coerce
+    .number()
+    .min(0, "Amount to raise must be 0 or greater")
+    .optional(),
   skipFinancials: z.boolean().default(false),
 });
 
@@ -32,16 +48,30 @@ interface TooltipData {
 }
 
 const tooltips: TooltipData = {
-  revenue: "Your total income from all sources in the last 12 months. Include all revenue streams, subscriptions, one-time sales, etc.",
-  monthlyBurnRate: "How much money you spend each month on average. Include salaries, rent, software, marketing, and all other expenses.",
-  netProfitLoss: "Revenue minus expenses. Positive means profit, negative means loss. This helps us understand your current financial health.",
-  fundingRaised: "Total amount of money you've raised from investors, grants, or loans since starting your business.",
-  planningToRaise: "How much funding you're looking to raise in your next round. This helps tailor the valuation for your fundraising goals.",
+  revenue:
+    "Your total income from all sources in the last 12 months. Include all revenue streams, subscriptions, one-time sales, etc.",
+  monthlyBurnRate:
+    "How much money you spend each month on average. Include salaries, rent, software, marketing, and all other expenses.",
+  netProfitLoss:
+    "Revenue minus expenses. Positive means profit, negative means loss. This helps us understand your current financial health.",
+  fundingRaised:
+    "Total amount of money you've raised from investors, grants, or loans since starting your business.",
+  planningToRaise:
+    "How much funding you're looking to raise in your next round. This helps tailor the valuation for your fundraising goals.",
 };
 
-export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: Step2Props) {
-  const [showTooltip, setShowTooltip] = useState<keyof TooltipData | null>(null);
-  const [skipMode, setSkipMode] = useState(initialData?.skipFinancials || false);
+export function Step2FinancialSnapshot({
+  onNext,
+  onBack,
+  initialData,
+  onSave,
+}: Step2Props) {
+  const [showTooltip, setShowTooltip] = useState<keyof TooltipData | null>(
+    null,
+  );
+  const [skipMode, setSkipMode] = useState(
+    initialData?.skipFinancials || false,
+  );
   const [showValues, setShowValues] = useState(true);
 
   const {
@@ -49,7 +79,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
     handleSubmit,
     setValue,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,7 +90,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
       planningToRaise: initialData?.planningToRaise || undefined,
       skipFinancials: initialData?.skipFinancials || false,
     },
-    mode: 'onChange'
+    mode: "onChange",
   });
 
   const watchedValues = watch();
@@ -93,7 +123,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
 
   const handleSkipToggle = () => {
     setSkipMode(!skipMode);
-    setValue('skipFinancials', !skipMode);
+    setValue("skipFinancials", !skipMode);
   };
 
   const renderTooltip = (field: keyof TooltipData) => (
@@ -106,7 +136,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
       >
         <HelpCircle className="w-4 h-4" />
       </button>
-      
+
       <AnimatePresence>
         {showTooltip === field && (
           <motion.div
@@ -130,7 +160,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
     label: string,
     placeholder: string,
     tooltipKey: keyof TooltipData,
-    isOptional = false
+    isOptional = false,
   ) => (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -138,7 +168,9 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
           <span>{label}</span>
           {renderTooltip(tooltipKey)}
           {isOptional && (
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Optional</span>
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+              Optional
+            </span>
           )}
         </label>
         <button
@@ -191,7 +223,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
           >
             <DollarSign className="w-8 h-8 text-white" />
@@ -200,7 +232,8 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
             💰 Tell us about your finances
           </h1>
           <p className="text-gray-600">
-            We keep it confidential and use this to provide more accurate valuations
+            We keep it confidential and use this to provide more accurate
+            valuations
           </p>
         </div>
 
@@ -212,7 +245,8 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
                 Not ready to share financials?
               </p>
               <p className="text-xs text-amber-700">
-                You can skip this step and we'll estimate based on your industry and stage
+                You can skip this step and we'll estimate based on your industry
+                and stage
               </p>
             </div>
             <button
@@ -220,11 +254,11 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
               onClick={handleSkipToggle}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 skipMode
-                  ? 'bg-amber-200 text-amber-800'
-                  : 'bg-white text-amber-700 border border-amber-200'
+                  ? "bg-amber-200 text-amber-800"
+                  : "bg-white text-amber-700 border border-amber-200"
               }`}
             >
-              {skipMode ? 'Fill Details' : 'Skip This Step'}
+              {skipMode ? "Fill Details" : "Skip This Step"}
             </button>
           </div>
         </div>
@@ -234,64 +268,70 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
             {!skipMode && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="space-y-6"
               >
                 {/* Privacy Toggle */}
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span className="text-sm text-gray-700">Show values as you type</span>
+                  <span className="text-sm text-gray-700">
+                    Show values as you type
+                  </span>
                   <button
                     type="button"
                     onClick={() => setShowValues(!showValues)}
                     className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-800"
                   >
-                    {showValues ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                    <span>{showValues ? 'Hide' : 'Show'}</span>
+                    {showValues ? (
+                      <Eye className="w-4 h-4" />
+                    ) : (
+                      <EyeOff className="w-4 h-4" />
+                    )}
+                    <span>{showValues ? "Hide" : "Show"}</span>
                   </button>
                 </div>
 
                 {/* Revenue */}
                 {renderCurrencyInput(
-                  'revenue',
-                  'Total Revenue (Last 12 Months)',
-                  '0',
-                  'revenue'
+                  "revenue",
+                  "Total Revenue (Last 12 Months)",
+                  "0",
+                  "revenue",
                 )}
 
                 {/* Monthly Burn Rate */}
                 {renderCurrencyInput(
-                  'monthlyBurnRate',
-                  'Monthly Burn Rate',
-                  '0',
-                  'monthlyBurnRate'
+                  "monthlyBurnRate",
+                  "Monthly Burn Rate",
+                  "0",
+                  "monthlyBurnRate",
                 )}
 
                 {/* Net Profit/Loss */}
                 {renderCurrencyInput(
-                  'netProfitLoss',
-                  'Net Profit / Loss (Monthly)',
-                  '0 (can be negative)',
-                  'netProfitLoss',
-                  true
+                  "netProfitLoss",
+                  "Net Profit / Loss (Monthly)",
+                  "0 (can be negative)",
+                  "netProfitLoss",
+                  true,
                 )}
 
                 {/* Funding Raised */}
                 {renderCurrencyInput(
-                  'fundingRaised',
-                  'Total Funding Raised',
-                  '0',
-                  'fundingRaised',
-                  true
+                  "fundingRaised",
+                  "Total Funding Raised",
+                  "0",
+                  "fundingRaised",
+                  true,
                 )}
 
                 {/* Planning to Raise */}
                 {renderCurrencyInput(
-                  'planningToRaise',
-                  'Amount You Want to Raise',
-                  '0',
-                  'planningToRaise',
-                  true
+                  "planningToRaise",
+                  "Amount You Want to Raise",
+                  "0",
+                  "planningToRaise",
+                  true,
                 )}
 
                 {/* Helper Text */}
@@ -299,9 +339,13 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
                   <div className="flex items-start space-x-3">
                     <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-blue-800">💡 Pro Tip</p>
+                      <p className="text-sm font-medium text-blue-800">
+                        💡 Pro Tip
+                      </p>
                       <p className="text-sm text-blue-700">
-                        Don't worry if you're not sure about exact numbers. We'll help estimate based on your industry benchmarks and stage.
+                        Don't worry if you're not sure about exact numbers.
+                        We'll help estimate based on your industry benchmarks
+                        and stage.
                       </p>
                     </div>
                   </div>
@@ -320,7 +364,8 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
                 <TrendingUp className="w-6 h-6 text-amber-600" />
               </div>
               <p className="text-gray-600">
-                No problem! We'll estimate your financials based on your industry and stage.
+                No problem! We'll estimate your financials based on your
+                industry and stage.
               </p>
             </motion.div>
           )}
@@ -337,7 +382,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData, onSave }: 
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
             </motion.button>
-            
+
             <motion.button
               type="submit"
               whileHover={{ scale: 1.02 }}

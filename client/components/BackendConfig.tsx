@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, Check, AlertTriangle, Globe, Monitor } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Settings, Check, AlertTriangle, Globe, Monitor } from "lucide-react";
 
 interface BackendConfigProps {
   onBackendChange?: (url: string) => void;
@@ -8,40 +8,44 @@ interface BackendConfigProps {
 
 export function BackendConfig({ onBackendChange }: BackendConfigProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [customUrl, setCustomUrl] = useState('');
-  const [selectedMode, setSelectedMode] = useState<'local' | 'custom' | 'demo'>('local');
+  const [customUrl, setCustomUrl] = useState("");
+  const [selectedMode, setSelectedMode] = useState<"local" | "custom" | "demo">(
+    "local",
+  );
 
   const backendOptions = [
     {
-      mode: 'local' as const,
-      name: 'Local Development',
-      url: 'http://127.0.0.1:8000',
-      description: 'Connect to local FastAPI server',
+      mode: "local" as const,
+      name: "Local Development",
+      url: "http://127.0.0.1:8000",
+      description: "Connect to local FastAPI server",
       icon: Monitor,
-      color: 'text-blue-600 bg-blue-50 border-blue-200'
+      color: "text-blue-600 bg-blue-50 border-blue-200",
     },
     {
-      mode: 'demo' as const,
-      name: 'Demo Mode',
-      url: 'demo',
-      description: 'Use mock data for demonstration',
+      mode: "demo" as const,
+      name: "Demo Mode",
+      url: "demo",
+      description: "Use mock data for demonstration",
       icon: Globe,
-      color: 'text-green-600 bg-green-50 border-green-200'
-    }
+      color: "text-green-600 bg-green-50 border-green-200",
+    },
   ];
 
   useEffect(() => {
-    const savedMode = localStorage.getItem('backendMode');
-    const savedUrl = localStorage.getItem('customBackendUrl');
+    const savedMode = localStorage.getItem("backendMode");
+    const savedUrl = localStorage.getItem("customBackendUrl");
 
     // Auto-detect environment and suggest appropriate mode
-    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const isDevelopment =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
 
     if (savedMode) {
       setSelectedMode(savedMode as any);
     } else {
       // Default to demo mode for cloud deployments
-      setSelectedMode(isDevelopment ? 'local' : 'demo');
+      setSelectedMode(isDevelopment ? "local" : "demo");
     }
 
     if (savedUrl) {
@@ -49,15 +53,22 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
     }
   }, []);
 
-  const handleModeChange = (mode: 'local' | 'custom' | 'demo', url?: string) => {
+  const handleModeChange = (
+    mode: "local" | "custom" | "demo",
+    url?: string,
+  ) => {
     setSelectedMode(mode);
-    const finalUrl = url || (mode === 'custom' ? customUrl : backendOptions.find(o => o.mode === mode)?.url || '');
-    
-    localStorage.setItem('backendMode', mode);
-    if (mode === 'custom') {
-      localStorage.setItem('customBackendUrl', customUrl);
+    const finalUrl =
+      url ||
+      (mode === "custom"
+        ? customUrl
+        : backendOptions.find((o) => o.mode === mode)?.url || "");
+
+    localStorage.setItem("backendMode", mode);
+    if (mode === "custom") {
+      localStorage.setItem("customBackendUrl", customUrl);
     }
-    
+
     onBackendChange?.(finalUrl);
   };
 
@@ -91,7 +102,7 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Backend Configuration
               </h3>
-              
+
               <div className="space-y-3 mb-6">
                 {backendOptions.map((option) => (
                   <button
@@ -100,7 +111,7 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
                     className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
                       selectedMode === option.mode
                         ? option.color
-                        : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+                        : "bg-gray-50 border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -108,8 +119,12 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
                         <option.icon className="w-5 h-5" />
                         <div>
                           <div className="font-medium">{option.name}</div>
-                          <div className="text-sm text-gray-600">{option.description}</div>
-                          <div className="text-xs text-gray-500 font-mono">{option.url}</div>
+                          <div className="text-sm text-gray-600">
+                            {option.description}
+                          </div>
+                          <div className="text-xs text-gray-500 font-mono">
+                            {option.url}
+                          </div>
                         </div>
                       </div>
                       {selectedMode === option.mode && (
@@ -120,24 +135,28 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
                 ))}
 
                 {/* Custom URL Option */}
-                <div className={`p-4 rounded-xl border-2 ${
-                  selectedMode === 'custom'
-                    ? 'text-purple-600 bg-purple-50 border-purple-200'
-                    : 'bg-gray-50 border-gray-200'
-                }`}>
+                <div
+                  className={`p-4 rounded-xl border-2 ${
+                    selectedMode === "custom"
+                      ? "text-purple-600 bg-purple-50 border-purple-200"
+                      : "bg-gray-50 border-gray-200"
+                  }`}
+                >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
                       <Globe className="w-5 h-5" />
                       <div>
                         <div className="font-medium">Custom Backend</div>
-                        <div className="text-sm text-gray-600">Connect to your own backend URL</div>
+                        <div className="text-sm text-gray-600">
+                          Connect to your own backend URL
+                        </div>
                       </div>
                     </div>
-                    {selectedMode === 'custom' && (
+                    {selectedMode === "custom" && (
                       <Check className="w-5 h-5 text-green-600" />
                     )}
                   </div>
-                  
+
                   <div className="space-y-2">
                     <input
                       type="url"
@@ -147,7 +166,7 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
                     <button
-                      onClick={() => handleModeChange('custom')}
+                      onClick={() => handleModeChange("custom")}
                       disabled={!customUrl}
                       className="w-full py-2 px-4 bg-purple-600 text-white rounded-lg text-sm font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
@@ -158,14 +177,16 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
               </div>
 
               {/* Environment-specific help */}
-              {window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? (
+              {window.location.hostname !== "localhost" &&
+              window.location.hostname !== "127.0.0.1" ? (
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-4">
                   <div className="flex items-start space-x-2">
                     <Globe className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-blue-800">
-                      <strong>Cloud Deployment Detected:</strong> Demo Mode is recommended as browsers block
-                      requests from HTTPS sites to localhost. To use your local backend, add CORS headers
-                      or deploy your backend to a cloud service.
+                      <strong>Cloud Deployment Detected:</strong> Demo Mode is
+                      recommended as browsers block requests from HTTPS sites to
+                      localhost. To use your local backend, add CORS headers or
+                      deploy your backend to a cloud service.
                     </div>
                   </div>
                 </div>
@@ -174,8 +195,8 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
                   <div className="flex items-start space-x-2">
                     <Monitor className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-green-800">
-                      <strong>Local Development:</strong> You can connect directly to your FastAPI server
-                      running on localhost:8000.
+                      <strong>Local Development:</strong> You can connect
+                      directly to your FastAPI server running on localhost:8000.
                     </div>
                   </div>
                 </div>

@@ -1,13 +1,26 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Brain, ArrowLeft, Upload, FileText, Link, Sparkles, CheckCircle, AlertCircle } from 'lucide-react';
-import { FileUpload } from '../FileUpload';
-import { AIRecommendation } from '../AIRecommendation';
-import { ValuationCalculation } from '../ValuationCalculation';
-import { UploadResponse, RecommendResponse, CalculateResponse } from '@/lib/api';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Brain,
+  ArrowLeft,
+  Upload,
+  FileText,
+  Link,
+  Sparkles,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
+import { FileUpload } from "../FileUpload";
+import { AIRecommendation } from "../AIRecommendation";
+import { ValuationCalculation } from "../ValuationCalculation";
+import {
+  UploadResponse,
+  RecommendResponse,
+  CalculateResponse,
+} from "@/lib/api";
 
 interface Step4Props {
   onBack: () => void;
@@ -16,17 +29,24 @@ interface Step4Props {
   startupData: any;
 }
 
-export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Step4Props) {
-  const [activeTab, setActiveTab] = useState('upload');
-  const [uploadedDocument, setUploadedDocument] = useState<UploadResponse | null>(null);
-  const [recommendations, setRecommendations] = useState<RecommendResponse | null>(null);
+export function Step4AIEnhanced({
+  onBack,
+  onComplete,
+  userID,
+  startupData,
+}: Step4Props) {
+  const [activeTab, setActiveTab] = useState("upload");
+  const [uploadedDocument, setUploadedDocument] =
+    useState<UploadResponse | null>(null);
+  const [recommendations, setRecommendations] =
+    useState<RecommendResponse | null>(null);
   const [valuation, setValuation] = useState<CalculateResponse | null>(null);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   const handleUploadSuccess = (result: UploadResponse) => {
     setUploadedDocument(result);
-    setActiveTab('analyze');
-    setError('');
+    setActiveTab("analyze");
+    setError("");
   };
 
   const handleUploadError = (error: string) => {
@@ -34,7 +54,7 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
   };
 
   const handleMethodSelect = (method: string) => {
-    setActiveTab('calculate');
+    setActiveTab("calculate");
   };
 
   const handleCalculationComplete = (result: CalculateResponse) => {
@@ -43,7 +63,7 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
       uploadedDocument,
       recommendations,
       valuation: result,
-      startupData
+      startupData,
     });
   };
 
@@ -60,9 +80,11 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
           <CardTitle className="text-2xl font-bold text-slate-800">
             AI-Enhanced Magic
           </CardTitle>
-          <p className="text-slate-600 mt-2">Upload or link anything that can help us help you 🤖✨</p>
+          <p className="text-slate-600 mt-2">
+            Upload or link anything that can help us help you 🤖✨
+          </p>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {error && (
             <Alert variant="destructive">
@@ -71,33 +93,43 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
             </Alert>
           )}
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-3 bg-white/50 rounded-lg p-1">
-              <TabsTrigger 
-                value="upload" 
+              <TabsTrigger
+                value="upload"
                 className="flex items-center space-x-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
               >
                 <Upload className="h-4 w-4" />
                 <span>Upload</span>
-                {uploadedDocument && <CheckCircle className="h-4 w-4 text-green-500" />}
+                {uploadedDocument && (
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                )}
               </TabsTrigger>
-              <TabsTrigger 
-                value="analyze" 
+              <TabsTrigger
+                value="analyze"
                 disabled={!canAnalyze}
                 className="flex items-center space-x-2 data-[state=active]:bg-white data-[state=active]:shadow-sm disabled:opacity-50"
               >
                 <Brain className="h-4 w-4" />
                 <span>Analyze</span>
-                {recommendations && <CheckCircle className="h-4 w-4 text-green-500" />}
+                {recommendations && (
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                )}
               </TabsTrigger>
-              <TabsTrigger 
-                value="calculate" 
+              <TabsTrigger
+                value="calculate"
                 disabled={!canCalculate}
                 className="flex items-center space-x-2 data-[state=active]:bg-white data-[state=active]:shadow-sm disabled:opacity-50"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>Calculate</span>
-                {valuation && <CheckCircle className="h-4 w-4 text-green-500" />}
+                {valuation && (
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                )}
               </TabsTrigger>
             </TabsList>
 
@@ -106,15 +138,21 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
                 <div className="flex items-center justify-center space-x-4 mb-6">
                   <div className="flex items-center space-x-2 px-4 py-2 bg-blue-100 rounded-full">
                     <FileText className="h-4 w-4 text-blue-600" />
-                    <span className="text-sm font-medium text-blue-800">Business Plans</span>
+                    <span className="text-sm font-medium text-blue-800">
+                      Business Plans
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2 px-4 py-2 bg-green-100 rounded-full">
                     <FileText className="h-4 w-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-800">Pitch Decks</span>
+                    <span className="text-sm font-medium text-green-800">
+                      Pitch Decks
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2 px-4 py-2 bg-purple-100 rounded-full">
                     <FileText className="h-4 w-4 text-purple-600" />
-                    <span className="text-sm font-medium text-purple-800">Financial Reports</span>
+                    <span className="text-sm font-medium text-purple-800">
+                      Financial Reports
+                    </span>
                   </div>
                 </div>
               </div>
@@ -130,8 +168,12 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <div>
-                      <p className="font-medium text-green-800">Document uploaded successfully! 🎉</p>
-                      <p className="text-sm text-green-600">Ready for AI analysis</p>
+                      <p className="font-medium text-green-800">
+                        Document uploaded successfully! 🎉
+                      </p>
+                      <p className="text-sm text-green-600">
+                        Ready for AI analysis
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -141,9 +183,12 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
             <TabsContent value="analyze" className="space-y-6 mt-6">
               <div className="space-y-4">
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">AI Analysis & Recommendations</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                    AI Analysis & Recommendations
+                  </h3>
                   <p className="text-slate-600">
-                    Our AI will analyze your document and startup information to provide personalized valuation method recommendations.
+                    Our AI will analyze your document and startup information to
+                    provide personalized valuation method recommendations.
                   </p>
                 </div>
 
@@ -159,9 +204,12 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
             <TabsContent value="calculate" className="space-y-6 mt-6">
               <div className="space-y-4">
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">Calculate Your Valuation</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                    Calculate Your Valuation
+                  </h3>
                   <p className="text-slate-600">
-                    Choose from AI-recommended methods or select your preferred valuation approach.
+                    Choose from AI-recommended methods or select your preferred
+                    valuation approach.
                   </p>
                 </div>
 
@@ -177,16 +225,28 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
           {/* Progress Indicator */}
           <div className="bg-white/50 rounded-lg p-4 border border-slate-200">
             <div className="flex items-center justify-between text-sm">
-              <div className={`flex items-center space-x-2 ${uploadedDocument ? 'text-green-600' : 'text-slate-400'}`}>
-                <div className={`w-2 h-2 rounded-full ${uploadedDocument ? 'bg-green-500' : 'bg-slate-300'}`}></div>
+              <div
+                className={`flex items-center space-x-2 ${uploadedDocument ? "text-green-600" : "text-slate-400"}`}
+              >
+                <div
+                  className={`w-2 h-2 rounded-full ${uploadedDocument ? "bg-green-500" : "bg-slate-300"}`}
+                ></div>
                 <span>Document Upload</span>
               </div>
-              <div className={`flex items-center space-x-2 ${recommendations ? 'text-green-600' : 'text-slate-400'}`}>
-                <div className={`w-2 h-2 rounded-full ${recommendations ? 'bg-green-500' : 'bg-slate-300'}`}></div>
+              <div
+                className={`flex items-center space-x-2 ${recommendations ? "text-green-600" : "text-slate-400"}`}
+              >
+                <div
+                  className={`w-2 h-2 rounded-full ${recommendations ? "bg-green-500" : "bg-slate-300"}`}
+                ></div>
                 <span>AI Analysis</span>
               </div>
-              <div className={`flex items-center space-x-2 ${valuation ? 'text-green-600' : 'text-slate-400'}`}>
-                <div className={`w-2 h-2 rounded-full ${valuation ? 'bg-green-500' : 'bg-slate-300'}`}></div>
+              <div
+                className={`flex items-center space-x-2 ${valuation ? "text-green-600" : "text-slate-400"}`}
+              >
+                <div
+                  className={`w-2 h-2 rounded-full ${valuation ? "bg-green-500" : "bg-slate-300"}`}
+                ></div>
                 <span>Valuation</span>
               </div>
             </div>
@@ -203,7 +263,7 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Traction
             </Button>
-            
+
             {!valuation ? (
               <Button
                 disabled
@@ -213,7 +273,14 @@ export function Step4AIEnhanced({ onBack, onComplete, userID, startupData }: Ste
               </Button>
             ) : (
               <Button
-                onClick={() => onComplete({ uploadedDocument, recommendations, valuation, startupData })}
+                onClick={() =>
+                  onComplete({
+                    uploadedDocument,
+                    recommendations,
+                    valuation,
+                    startupData,
+                  })
+                }
                 className="flex-1 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-[1.02]"
               >
                 View Complete Results 🎉

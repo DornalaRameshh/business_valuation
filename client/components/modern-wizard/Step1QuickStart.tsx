@@ -1,15 +1,23 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { ChevronDown, Flag, Building2, Rocket, Check, X, HelpCircle } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  ChevronDown,
+  Flag,
+  Building2,
+  Rocket,
+  Check,
+  X,
+  HelpCircle,
+} from "lucide-react";
 
 const formSchema = z.object({
-  businessName: z.string().min(1, 'Business name is required'),
-  country: z.string().min(1, 'Please select your country'),
-  industry: z.string().min(1, 'Please select your industry'),
-  stage: z.string().min(1, 'Please select your business stage'),
+  businessName: z.string().min(1, "Business name is required"),
+  country: z.string().min(1, "Please select your country"),
+  industry: z.string().min(1, "Please select your industry"),
+  stage: z.string().min(1, "Please select your business stage"),
   isLaunched: z.boolean(),
 });
 
@@ -22,43 +30,63 @@ interface Step1Props {
 }
 
 const countries = [
-  { code: 'US', name: 'United States', flag: '🇺🇸' },
-  { code: 'CA', name: 'Canada', flag: '🇨🇦' },
-  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
-  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
-  { code: 'DE', name: 'Germany', flag: '🇩🇪' },
-  { code: 'FR', name: 'France', flag: '🇫🇷' },
-  { code: 'IN', name: 'India', flag: '🇮🇳' },
-  { code: 'SG', name: 'Singapore', flag: '🇸🇬' },
-  { code: 'JP', name: 'Japan', flag: '🇯🇵' },
-  { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
+  { code: "US", name: "United States", flag: "🇺🇸" },
+  { code: "CA", name: "Canada", flag: "🇨🇦" },
+  { code: "GB", name: "United Kingdom", flag: "🇬🇧" },
+  { code: "AU", name: "Australia", flag: "🇦🇺" },
+  { code: "DE", name: "Germany", flag: "🇩🇪" },
+  { code: "FR", name: "France", flag: "🇫🇷" },
+  { code: "IN", name: "India", flag: "🇮🇳" },
+  { code: "SG", name: "Singapore", flag: "🇸🇬" },
+  { code: "JP", name: "Japan", flag: "🇯🇵" },
+  { code: "BR", name: "Brazil", flag: "🇧🇷" },
 ];
 
 const industries = [
-  { value: 'saas', label: 'SaaS/Software', icon: '💻' },
-  { value: 'ecommerce', label: 'E-commerce', icon: '🛒' },
-  { value: 'fintech', label: 'FinTech', icon: '💳' },
-  { value: 'healthtech', label: 'HealthTech', icon: '🏥' },
-  { value: 'edtech', label: 'EdTech', icon: '📚' },
-  { value: 'ai', label: 'AI/Machine Learning', icon: '🤖' },
-  { value: 'biotech', label: 'Biotech', icon: '🧬' },
-  { value: 'cleantech', label: 'CleanTech', icon: '🌱' },
-  { value: 'gaming', label: 'Gaming', icon: '🎮' },
-  { value: 'other', label: 'Other', icon: '📦' },
+  { value: "saas", label: "SaaS/Software", icon: "💻" },
+  { value: "ecommerce", label: "E-commerce", icon: "🛒" },
+  { value: "fintech", label: "FinTech", icon: "💳" },
+  { value: "healthtech", label: "HealthTech", icon: "🏥" },
+  { value: "edtech", label: "EdTech", icon: "📚" },
+  { value: "ai", label: "AI/Machine Learning", icon: "🤖" },
+  { value: "biotech", label: "Biotech", icon: "🧬" },
+  { value: "cleantech", label: "CleanTech", icon: "🌱" },
+  { value: "gaming", label: "Gaming", icon: "🎮" },
+  { value: "other", label: "Other", icon: "📦" },
 ];
 
 const stages = [
-  { value: 'idea', label: 'Idea', description: 'Concept stage, validating the idea', icon: '💡' },
-  { value: 'mvp', label: 'MVP', description: 'Building minimum viable product', icon: '🔧' },
-  { value: 'launched', label: 'Launched', description: 'Product is live, getting traction', icon: '🚀' },
-  { value: 'growth', label: 'Growth', description: 'Scaling and expanding', icon: '📈' },
+  {
+    value: "idea",
+    label: "Idea",
+    description: "Concept stage, validating the idea",
+    icon: "💡",
+  },
+  {
+    value: "mvp",
+    label: "MVP",
+    description: "Building minimum viable product",
+    icon: "🔧",
+  },
+  {
+    value: "launched",
+    label: "Launched",
+    description: "Product is live, getting traction",
+    icon: "🚀",
+  },
+  {
+    value: "growth",
+    label: "Growth",
+    description: "Scaling and expanding",
+    icon: "📈",
+  },
 ];
 
 export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [showIndustryDropdown, setShowIndustryDropdown] = useState(false);
   const [showStageDropdown, setShowStageDropdown] = useState(false);
-  const [countrySearch, setCountrySearch] = useState('');
+  const [countrySearch, setCountrySearch] = useState("");
   const [showTooltip, setShowTooltip] = useState<string | null>(null);
 
   const {
@@ -66,17 +94,17 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      businessName: initialData?.businessName || '',
-      country: initialData?.country || '',
-      industry: initialData?.industry || '',
-      stage: initialData?.stage || '',
+      businessName: initialData?.businessName || "",
+      country: initialData?.country || "",
+      industry: initialData?.industry || "",
+      stage: initialData?.stage || "",
       isLaunched: initialData?.isLaunched || false,
     },
-    mode: 'onChange'
+    mode: "onChange",
   });
 
   const watchedValues = watch();
@@ -92,31 +120,35 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
     return () => clearTimeout(timer);
   }, [watchedValues, onSave]);
 
-  const selectedCountry = countries.find(c => c.name === watchedValues.country);
-  const selectedIndustry = industries.find(i => i.value === watchedValues.industry);
-  const selectedStage = stages.find(s => s.value === watchedValues.stage);
+  const selectedCountry = countries.find(
+    (c) => c.name === watchedValues.country,
+  );
+  const selectedIndustry = industries.find(
+    (i) => i.value === watchedValues.industry,
+  );
+  const selectedStage = stages.find((s) => s.value === watchedValues.stage);
 
-  const filteredCountries = countries.filter(country =>
-    country.name.toLowerCase().includes(countrySearch.toLowerCase())
+  const filteredCountries = countries.filter((country) =>
+    country.name.toLowerCase().includes(countrySearch.toLowerCase()),
   );
 
   const onSubmit = (data: FormData) => {
     onNext(data);
   };
 
-  const handleCountrySelect = (country: typeof countries[0]) => {
-    setValue('country', country.name, { shouldValidate: true });
+  const handleCountrySelect = (country: (typeof countries)[0]) => {
+    setValue("country", country.name, { shouldValidate: true });
     setShowCountryDropdown(false);
-    setCountrySearch('');
+    setCountrySearch("");
   };
 
-  const handleIndustrySelect = (industry: typeof industries[0]) => {
-    setValue('industry', industry.value, { shouldValidate: true });
+  const handleIndustrySelect = (industry: (typeof industries)[0]) => {
+    setValue("industry", industry.value, { shouldValidate: true });
     setShowIndustryDropdown(false);
   };
 
-  const handleStageSelect = (stage: typeof stages[0]) => {
-    setValue('stage', stage.value, { shouldValidate: true });
+  const handleStageSelect = (stage: (typeof stages)[0]) => {
+    setValue("stage", stage.value, { shouldValidate: true });
     setShowStageDropdown(false);
   };
 
@@ -133,7 +165,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
           >
             <Rocket className="w-8 h-8 text-white" />
@@ -142,7 +174,8 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
             👋 Welcome! Let's begin with the basics
           </h1>
           <p className="text-gray-600">
-            Just a few quick questions to get started - this should take less than 2 minutes
+            Just a few quick questions to get started - this should take less
+            than 2 minutes
           </p>
         </div>
 
@@ -153,7 +186,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
               Business Name
             </label>
             <input
-              {...register('businessName')}
+              {...register("businessName")}
               placeholder="e.g., InferAI"
               className="wizard-input w-full"
             />
@@ -253,7 +286,9 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
                     <span>{selectedIndustry.label}</span>
                   </>
                 ) : (
-                  <span className="text-gray-500">What industry best describes your business?</span>
+                  <span className="text-gray-500">
+                    What industry best describes your business?
+                  </span>
                 )}
               </div>
               <ChevronDown className="w-5 h-5 text-gray-400" />
@@ -333,8 +368,12 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
                     >
                       <span className="text-lg mt-0.5">{stage.icon}</span>
                       <div className="text-left">
-                        <div className="text-gray-900 font-medium">{stage.label}</div>
-                        <div className="text-sm text-gray-600">{stage.description}</div>
+                        <div className="text-gray-900 font-medium">
+                          {stage.label}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {stage.description}
+                        </div>
                       </div>
                     </button>
                   ))}
@@ -361,11 +400,13 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
             <div className="flex space-x-3">
               <button
                 type="button"
-                onClick={() => setValue('isLaunched', false, { shouldValidate: true })}
+                onClick={() =>
+                  setValue("isLaunched", false, { shouldValidate: true })
+                }
                 className={`flex-1 flex items-center justify-center space-x-2 p-4 rounded-2xl border-2 transition-all ${
                   watchedValues.isLaunched === false
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
                 }`}
               >
                 <span className="text-2xl">🚫</span>
@@ -373,11 +414,13 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
               </button>
               <button
                 type="button"
-                onClick={() => setValue('isLaunched', true, { shouldValidate: true })}
+                onClick={() =>
+                  setValue("isLaunched", true, { shouldValidate: true })
+                }
                 className={`flex-1 flex items-center justify-center space-x-2 p-4 rounded-2xl border-2 transition-all ${
                   watchedValues.isLaunched === true
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
                 }`}
               >
                 <span className="text-2xl">✅</span>
@@ -394,8 +437,8 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
             whileTap={{ scale: isValid ? 0.98 : 1 }}
             className={`w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all ${
               isValid
-                ? 'wizard-button-primary'
-                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                ? "wizard-button-primary"
+                : "bg-gray-200 text-gray-500 cursor-not-allowed"
             }`}
           >
             → Next

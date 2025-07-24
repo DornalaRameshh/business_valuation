@@ -1,22 +1,43 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { 
-  Brain, ArrowLeft, Upload, FileText, Link, 
-  CheckCircle, X, AlertCircle, Loader2, 
-  ExternalLink, Globe, Paperclip 
-} from 'lucide-react';
-import { FileUpload } from '../FileUpload';
-import { UploadResponse } from '@/lib/api';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Brain,
+  ArrowLeft,
+  Upload,
+  FileText,
+  Link,
+  CheckCircle,
+  X,
+  AlertCircle,
+  Loader2,
+  ExternalLink,
+  Globe,
+  Paperclip,
+} from "lucide-react";
+import { FileUpload } from "../FileUpload";
+import { UploadResponse } from "@/lib/api";
 
 const formSchema = z.object({
   pitchDeck: z.any().optional(),
   financialModel: z.any().optional(),
-  linkedinUrl: z.string().url('Please enter a valid LinkedIn URL').optional().or(z.literal('')),
-  crunchbaseUrl: z.string().url('Please enter a valid Crunchbase URL').optional().or(z.literal('')),
-  websiteUrl: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
+  linkedinUrl: z
+    .string()
+    .url("Please enter a valid LinkedIn URL")
+    .optional()
+    .or(z.literal("")),
+  crunchbaseUrl: z
+    .string()
+    .url("Please enter a valid Crunchbase URL")
+    .optional()
+    .or(z.literal("")),
+  websiteUrl: z
+    .string()
+    .url("Please enter a valid website URL")
+    .optional()
+    .or(z.literal("")),
   skipExtras: z.boolean().default(false),
 });
 
@@ -31,25 +52,31 @@ interface Step4Props {
 }
 
 const fileTypes = [
-  { 
-    type: 'pitchDeck', 
-    label: 'Pitch Deck', 
-    icon: '📊', 
-    description: 'PDF or PPTX presentation',
-    accept: '.pdf,.pptx,.ppt',
-    maxSize: '10MB'
+  {
+    type: "pitchDeck",
+    label: "Pitch Deck",
+    icon: "📊",
+    description: "PDF or PPTX presentation",
+    accept: ".pdf,.pptx,.ppt",
+    maxSize: "10MB",
   },
-  { 
-    type: 'financialModel', 
-    label: 'Financial Model', 
-    icon: '📈', 
-    description: 'Excel spreadsheet with projections',
-    accept: '.xlsx,.xls,.csv',
-    maxSize: '5MB'
+  {
+    type: "financialModel",
+    label: "Financial Model",
+    icon: "📈",
+    description: "Excel spreadsheet with projections",
+    accept: ".xlsx,.xls,.csv",
+    maxSize: "5MB",
   },
 ];
 
-export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: Step4Props) {
+export function Step4AIExtras({
+  onNext,
+  onBack,
+  initialData,
+  onSave,
+  userID,
+}: Step4Props) {
   const [skipMode, setSkipMode] = useState(initialData?.skipExtras || false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadResponse[]>([]);
   const [uploadingFiles, setUploadingFiles] = useState<string[]>([]);
@@ -60,16 +87,16 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      linkedinUrl: initialData?.linkedinUrl || '',
-      crunchbaseUrl: initialData?.crunchbaseUrl || '',
-      websiteUrl: initialData?.websiteUrl || '',
+      linkedinUrl: initialData?.linkedinUrl || "",
+      crunchbaseUrl: initialData?.crunchbaseUrl || "",
+      websiteUrl: initialData?.websiteUrl || "",
       skipExtras: initialData?.skipExtras || false,
     },
-    mode: 'onChange'
+    mode: "onChange",
   });
 
   const watchedValues = watch();
@@ -85,24 +112,27 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
     return () => clearTimeout(timer);
   }, [watchedValues, onSave]);
 
-  const handleFileUploadSuccess = (result: UploadResponse, fileType: string) => {
-    setUploadedFiles(prev => [...prev, { ...result, fileType }]);
-    setUploadingFiles(prev => prev.filter(f => f !== fileType));
-    setUploadErrors(prev => ({ ...prev, [fileType]: '' }));
+  const handleFileUploadSuccess = (
+    result: UploadResponse,
+    fileType: string,
+  ) => {
+    setUploadedFiles((prev) => [...prev, { ...result, fileType }]);
+    setUploadingFiles((prev) => prev.filter((f) => f !== fileType));
+    setUploadErrors((prev) => ({ ...prev, [fileType]: "" }));
   };
 
   const handleFileUploadError = (error: string, fileType: string) => {
-    setUploadErrors(prev => ({ ...prev, [fileType]: error }));
-    setUploadingFiles(prev => prev.filter(f => f !== fileType));
+    setUploadErrors((prev) => ({ ...prev, [fileType]: error }));
+    setUploadingFiles((prev) => prev.filter((f) => f !== fileType));
   };
 
   const handleFileUploadStart = (fileType: string) => {
-    setUploadingFiles(prev => [...prev, fileType]);
-    setUploadErrors(prev => ({ ...prev, [fileType]: '' }));
+    setUploadingFiles((prev) => [...prev, fileType]);
+    setUploadErrors((prev) => ({ ...prev, [fileType]: "" }));
   };
 
   const removeUploadedFile = (index: number) => {
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const onSubmit = (data: FormData) => {
@@ -115,13 +145,13 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
 
   const handleSkipToggle = () => {
     setSkipMode(!skipMode);
-    setValue('skipExtras', !skipMode);
+    setValue("skipExtras", !skipMode);
   };
 
   const extractDomainFromUrl = (url: string) => {
     try {
       const domain = new URL(url).hostname;
-      return domain.replace('www.', '');
+      return domain.replace("www.", "");
     } catch {
       return url;
     }
@@ -129,14 +159,14 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
 
   const validateUrl = (url: string, type: string) => {
     if (!url) return true;
-    
+
     try {
       const urlObj = new URL(url);
       switch (type) {
-        case 'linkedin':
-          return urlObj.hostname.includes('linkedin.com');
-        case 'crunchbase':
-          return urlObj.hostname.includes('crunchbase.com');
+        case "linkedin":
+          return urlObj.hostname.includes("linkedin.com");
+        case "crunchbase":
+          return urlObj.hostname.includes("crunchbase.com");
         default:
           return true;
       }
@@ -158,7 +188,7 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
             className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
           >
             <Brain className="w-8 h-8 text-white" />
@@ -167,7 +197,8 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
             🧠 Upload files or links to boost accuracy
           </h1>
           <p className="text-gray-600">
-            Optional but recommended - helps our AI provide more precise valuations
+            Optional but recommended - helps our AI provide more precise
+            valuations
           </p>
         </div>
 
@@ -179,7 +210,8 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                 Want to skip the extras?
               </p>
               <p className="text-xs text-indigo-700">
-                We can generate your valuation with the info you've already provided
+                We can generate your valuation with the info you've already
+                provided
               </p>
             </div>
             <button
@@ -187,11 +219,11 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
               onClick={handleSkipToggle}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                 skipMode
-                  ? 'bg-indigo-200 text-indigo-800'
-                  : 'bg-white text-indigo-700 border border-indigo-200'
+                  ? "bg-indigo-200 text-indigo-800"
+                  : "bg-white text-indigo-700 border border-indigo-200"
               }`}
             >
-              {skipMode ? 'Add Details' : 'Skip This Step'}
+              {skipMode ? "Add Details" : "Skip This Step"}
             </button>
           </div>
         </div>
@@ -201,7 +233,7 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
             {!skipMode && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="space-y-8"
               >
@@ -209,7 +241,9 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                 <div className="space-y-6">
                   <div className="flex items-center space-x-2">
                     <Upload className="w-5 h-5 text-indigo-600" />
-                    <h3 className="text-lg font-semibold text-gray-900">Upload Documents</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Upload Documents
+                    </h3>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
@@ -219,8 +253,12 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                           <div className="flex items-center space-x-2">
                             <span className="text-2xl">{fileType.icon}</span>
                             <div>
-                              <p className="font-medium text-gray-900">{fileType.label}</p>
-                              <p className="text-xs text-gray-600">{fileType.description}</p>
+                              <p className="font-medium text-gray-900">
+                                {fileType.label}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                {fileType.description}
+                              </p>
                             </div>
                           </div>
                           <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
@@ -232,9 +270,13 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                           {uploadingFiles.includes(fileType.type) ? (
                             <div className="text-center">
                               <Loader2 className="w-8 h-8 text-indigo-600 animate-spin mx-auto mb-2" />
-                              <p className="text-sm text-gray-600">Uploading {fileType.label}...</p>
+                              <p className="text-sm text-gray-600">
+                                Uploading {fileType.label}...
+                              </p>
                             </div>
-                          ) : uploadedFiles.find(f => f.fileType === fileType.type) ? (
+                          ) : uploadedFiles.find(
+                              (f) => f.fileType === fileType.type,
+                            ) ? (
                             <div className="text-center">
                               <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
                               <p className="text-sm font-medium text-green-800">
@@ -243,7 +285,9 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                               <button
                                 type="button"
                                 onClick={() => {
-                                  const index = uploadedFiles.findIndex(f => f.fileType === fileType.type);
+                                  const index = uploadedFiles.findIndex(
+                                    (f) => f.fileType === fileType.type,
+                                  );
                                   if (index !== -1) removeUploadedFile(index);
                                 }}
                                 className="text-xs text-red-600 hover:text-red-800 mt-1"
@@ -266,11 +310,14 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                                     handleFileUploadStart(fileType.type);
                                     // Simulate file upload for now
                                     setTimeout(() => {
-                                      handleFileUploadSuccess({
-                                        bucket: 'demo-bucket',
-                                        key: `demo/${file.name}`,
-                                        message: 'File uploaded successfully'
-                                      }, fileType.type);
+                                      handleFileUploadSuccess(
+                                        {
+                                          bucket: "demo-bucket",
+                                          key: `demo/${file.name}`,
+                                          message: "File uploaded successfully",
+                                        },
+                                        fileType.type,
+                                      );
                                     }, 2000);
                                   }
                                 }}
@@ -294,7 +341,9 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                               className="mt-3 flex items-center space-x-2 text-red-600"
                             >
                               <AlertCircle className="w-4 h-4" />
-                              <span className="text-sm">{uploadErrors[fileType.type]}</span>
+                              <span className="text-sm">
+                                {uploadErrors[fileType.type]}
+                              </span>
                             </motion.div>
                           )}
                         </div>
@@ -307,7 +356,9 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                 <div className="space-y-6">
                   <div className="flex items-center space-x-2">
                     <Link className="w-5 h-5 text-indigo-600" />
-                    <h3 className="text-lg font-semibold text-gray-900">Company Links</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Company Links
+                    </h3>
                   </div>
 
                   <div className="space-y-4">
@@ -316,25 +367,31 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                       <label className="flex items-center space-x-2 text-sm font-medium text-gray-900">
                         <Globe className="w-4 h-4 text-blue-600" />
                         <span>LinkedIn Company Page</span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Optional</span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          Optional
+                        </span>
                       </label>
                       <div className="relative">
                         <input
-                          {...register('linkedinUrl')}
+                          {...register("linkedinUrl")}
                           type="url"
                           placeholder="https://linkedin.com/company/your-company"
                           className="wizard-input w-full pr-10"
                         />
-                        {watchedValues.linkedinUrl && validateUrl(watchedValues.linkedinUrl, 'linkedin') && (
-                          <a
-                            href={watchedValues.linkedinUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        )}
+                        {watchedValues.linkedinUrl &&
+                          validateUrl(
+                            watchedValues.linkedinUrl,
+                            "linkedin",
+                          ) && (
+                            <a
+                              href={watchedValues.linkedinUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
                       </div>
                       {errors.linkedinUrl && (
                         <motion.p
@@ -352,25 +409,31 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                       <label className="flex items-center space-x-2 text-sm font-medium text-gray-900">
                         <Globe className="w-4 h-4 text-orange-600" />
                         <span>Crunchbase Profile</span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Optional</span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          Optional
+                        </span>
                       </label>
                       <div className="relative">
                         <input
-                          {...register('crunchbaseUrl')}
+                          {...register("crunchbaseUrl")}
                           type="url"
                           placeholder="https://crunchbase.com/organization/your-company"
                           className="wizard-input w-full pr-10"
                         />
-                        {watchedValues.crunchbaseUrl && validateUrl(watchedValues.crunchbaseUrl, 'crunchbase') && (
-                          <a
-                            href={watchedValues.crunchbaseUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        )}
+                        {watchedValues.crunchbaseUrl &&
+                          validateUrl(
+                            watchedValues.crunchbaseUrl,
+                            "crunchbase",
+                          ) && (
+                            <a
+                              href={watchedValues.crunchbaseUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
                       </div>
                       {errors.crunchbaseUrl && (
                         <motion.p
@@ -388,11 +451,13 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                       <label className="flex items-center space-x-2 text-sm font-medium text-gray-900">
                         <Globe className="w-4 h-4 text-green-600" />
                         <span>Company Website</span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Optional</span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          Optional
+                        </span>
                       </label>
                       <div className="relative">
                         <input
-                          {...register('websiteUrl')}
+                          {...register("websiteUrl")}
                           type="url"
                           placeholder="https://your-company.com"
                           className="wizard-input w-full pr-10"
@@ -426,10 +491,13 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                   <div className="flex items-start space-x-3">
                     <Brain className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-blue-800">How this helps</p>
+                      <p className="text-sm font-medium text-blue-800">
+                        How this helps
+                      </p>
                       <p className="text-sm text-blue-700">
-                        Our AI analyzes your documents and profiles to understand your business model, 
-                        market positioning, and growth trajectory for more accurate valuations.
+                        Our AI analyzes your documents and profiles to
+                        understand your business model, market positioning, and
+                        growth trajectory for more accurate valuations.
                       </p>
                     </div>
                   </div>
@@ -448,7 +516,8 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                 <Brain className="w-6 h-6 text-indigo-600" />
               </div>
               <p className="text-gray-600">
-                No problem! We'll generate your valuation with the information you've provided.
+                No problem! We'll generate your valuation with the information
+                you've provided.
               </p>
             </motion.div>
           )}
@@ -465,7 +534,7 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
             </motion.button>
-            
+
             <motion.button
               type="submit"
               whileHover={{ scale: 1.02 }}
@@ -479,7 +548,7 @@ export function Step4AIExtras({ onNext, onBack, initialData, onSave, userID }: S
                   Uploading...
                 </>
               ) : (
-                '🚀 Generate My Valuation'
+                "🚀 Generate My Valuation"
               )}
             </motion.button>
           </div>

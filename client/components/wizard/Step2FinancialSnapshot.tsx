@@ -1,20 +1,29 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { DollarSign, ArrowLeft, Lightbulb, AlertCircle } from 'lucide-react';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { DollarSign, ArrowLeft, Lightbulb, AlertCircle } from "lucide-react";
 
 const formSchema = z.object({
-  revenue: z.coerce.number().min(0, 'Revenue must be 0 or greater').optional(),
-  monthlyBurnRate: z.coerce.number().min(0, 'Burn rate must be 0 or greater').optional(),
+  revenue: z.coerce.number().min(0, "Revenue must be 0 or greater").optional(),
+  monthlyBurnRate: z.coerce
+    .number()
+    .min(0, "Burn rate must be 0 or greater")
+    .optional(),
   netProfitLoss: z.coerce.number().optional(),
-  fundingRaised: z.coerce.number().min(0, 'Funding raised must be 0 or greater').optional(),
-  planningToRaise: z.coerce.number().min(0, 'Planning to raise must be 0 or greater').optional(),
+  fundingRaised: z.coerce
+    .number()
+    .min(0, "Funding raised must be 0 or greater")
+    .optional(),
+  planningToRaise: z.coerce
+    .number()
+    .min(0, "Planning to raise must be 0 or greater")
+    .optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -25,13 +34,17 @@ interface Step2Props {
   initialData?: Partial<FormData>;
 }
 
-export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Props) {
-  const [error, setError] = useState<string>('');
+export function Step2FinancialSnapshot({
+  onNext,
+  onBack,
+  initialData,
+}: Step2Props) {
+  const [error, setError] = useState<string>("");
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,18 +54,18 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
       fundingRaised: initialData?.fundingRaised || undefined,
       planningToRaise: initialData?.planningToRaise || undefined,
     },
-    mode: 'onChange'
+    mode: "onChange",
   });
 
   const onSubmit = (data: FormData) => {
-    setError('');
+    setError("");
     onNext(data);
   };
 
   const formatCurrency = (value: string) => {
-    const num = parseFloat(value.replace(/[^0-9.]/g, ''));
-    if (isNaN(num)) return '';
-    return new Intl.NumberFormat('en-US').format(num);
+    const num = parseFloat(value.replace(/[^0-9.]/g, ""));
+    if (isNaN(num)) return "";
+    return new Intl.NumberFormat("en-US").format(num);
   };
 
   return (
@@ -65,9 +78,11 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
           <CardTitle className="text-2xl font-bold text-slate-800">
             Financial Snapshot
           </CardTitle>
-          <p className="text-slate-600 mt-2">Let's talk money – just enough to get started 💸</p>
+          <p className="text-slate-600 mt-2">
+            Let's talk money – just enough to get started 💸
+          </p>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {error && (
             <Alert variant="destructive">
@@ -89,7 +104,7 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
                   type="number"
                   placeholder="0"
                   className="pl-8 border-slate-300 focus:border-green-400 focus:ring-green-200 transition-all duration-200"
-                  {...register('revenue')}
+                  {...register("revenue")}
                 />
               </div>
               <p className="text-xs text-slate-500">
@@ -102,7 +117,10 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
 
             {/* Monthly Burn Rate */}
             <div className="space-y-2">
-              <Label htmlFor="monthlyBurnRate" className="text-slate-700 font-medium">
+              <Label
+                htmlFor="monthlyBurnRate"
+                className="text-slate-700 font-medium"
+              >
                 Monthly Burn Rate 🔥
               </Label>
               <div className="relative">
@@ -112,20 +130,26 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
                   type="number"
                   placeholder="0"
                   className="pl-8 border-slate-300 focus:border-green-400 focus:ring-green-200 transition-all duration-200"
-                  {...register('monthlyBurnRate')}
+                  {...register("monthlyBurnRate")}
                 />
               </div>
               <p className="text-xs text-slate-500">
-                Roughly how much do you spend monthly? We'll help you estimate if unsure.
+                Roughly how much do you spend monthly? We'll help you estimate
+                if unsure.
               </p>
               {errors.monthlyBurnRate && (
-                <p className="text-sm text-red-500">{errors.monthlyBurnRate.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.monthlyBurnRate.message}
+                </p>
               )}
             </div>
 
             {/* Net Profit/Loss */}
             <div className="space-y-2">
-              <Label htmlFor="netProfitLoss" className="text-slate-700 font-medium">
+              <Label
+                htmlFor="netProfitLoss"
+                className="text-slate-700 font-medium"
+              >
                 Net Profit or Loss (Monthly) 📈
               </Label>
               <div className="relative">
@@ -135,20 +159,26 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
                   type="number"
                   placeholder="0 (can be negative)"
                   className="pl-8 border-slate-300 focus:border-green-400 focus:ring-green-200 transition-all duration-200"
-                  {...register('netProfitLoss')}
+                  {...register("netProfitLoss")}
                 />
               </div>
               <p className="text-xs text-slate-500">
-                Optional – helps with better accuracy. Use negative numbers for losses.
+                Optional – helps with better accuracy. Use negative numbers for
+                losses.
               </p>
               {errors.netProfitLoss && (
-                <p className="text-sm text-red-500">{errors.netProfitLoss.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.netProfitLoss.message}
+                </p>
               )}
             </div>
 
             {/* Funding Raised to Date */}
             <div className="space-y-2">
-              <Label htmlFor="fundingRaised" className="text-slate-700 font-medium">
+              <Label
+                htmlFor="fundingRaised"
+                className="text-slate-700 font-medium"
+              >
                 Funding Raised to Date 💰
               </Label>
               <div className="relative">
@@ -158,20 +188,25 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
                   type="number"
                   placeholder="0"
                   className="pl-8 border-slate-300 focus:border-green-400 focus:ring-green-200 transition-all duration-200"
-                  {...register('fundingRaised')}
+                  {...register("fundingRaised")}
                 />
               </div>
               <p className="text-xs text-slate-500">
                 If you've raised money before, tell us how much (total amount).
               </p>
               {errors.fundingRaised && (
-                <p className="text-sm text-red-500">{errors.fundingRaised.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.fundingRaised.message}
+                </p>
               )}
             </div>
 
             {/* Planning to Raise */}
             <div className="space-y-2">
-              <Label htmlFor="planningToRaise" className="text-slate-700 font-medium">
+              <Label
+                htmlFor="planningToRaise"
+                className="text-slate-700 font-medium"
+              >
                 How much are you planning to raise? 🎯
               </Label>
               <div className="relative">
@@ -181,14 +216,16 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
                   type="number"
                   placeholder="0"
                   className="pl-8 border-slate-300 focus:border-green-400 focus:ring-green-200 transition-all duration-200"
-                  {...register('planningToRaise')}
+                  {...register("planningToRaise")}
                 />
               </div>
               <p className="text-xs text-slate-500">
                 This helps tailor your valuation for fundraising.
               </p>
               {errors.planningToRaise && (
-                <p className="text-sm text-red-500">{errors.planningToRaise.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.planningToRaise.message}
+                </p>
               )}
             </div>
 
@@ -198,7 +235,8 @@ export function Step2FinancialSnapshot({ onNext, onBack, initialData }: Step2Pro
               <div>
                 <p className="text-sm font-medium text-blue-800">💡 Pro Tip</p>
                 <p className="text-sm text-blue-700">
-                  Not sure about everything? Just leave it blank – AI fills the gaps based on your industry and stage!
+                  Not sure about everything? Just leave it blank – AI fills the
+                  gaps based on your industry and stage!
                 </p>
               </div>
             </div>
