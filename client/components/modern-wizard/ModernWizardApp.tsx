@@ -281,6 +281,16 @@ export function ModernWizardApp() {
               <span>🔒 Your data is secure and private</span>
               <span>•</span>
               <span>⚡ Auto-saved as you go</span>
+              <span>•</span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                currentBackendMode === 'Demo Mode'
+                  ? 'bg-blue-100 text-blue-700'
+                  : currentBackendMode === 'Local Backend'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-purple-100 text-purple-700'
+              }`}>
+                {currentBackendMode}
+              </span>
             </div>
             
             <button
