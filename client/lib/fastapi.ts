@@ -292,11 +292,27 @@ export const fastapiService = {
     }
 
     try {
-      // Test if FastAPI backend is running
-      const response = await fetch(`${currentBackendUrl}/docs`);
+      // Test if FastAPI backend is running with a shorter timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+
+      const response = await fetch(`${currentBackendUrl}/docs`, {
+        signal: controller.signal,
+        mode: 'cors'
+      });
+
+      clearTimeout(timeoutId);
       return response.ok;
-    } catch (error) {
+    } catch (error: any) {
       console.error('FastAPI connection test failed:', error);
+
+      // Log specific error types for debugging
+      if (error.name === 'AbortError') {
+        console.error('Connection test timed out');
+      } else if (error.message?.includes('Failed to fetch')) {
+        console.error('CORS or network error - likely cross-origin issue');
+      }
+
       return false;
     }
   }
