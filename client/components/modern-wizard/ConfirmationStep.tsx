@@ -68,10 +68,11 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
         setIsGenerating(true);
         setError('');
 
-        // Test connection first
+        // Test connection first (but don't fail immediately)
         const canConnect = await fastapiService.testConnection();
         if (!canConnect) {
-          throw new Error('Backend server is not running. Please start your FastAPI server.');
+          console.warn('Backend connection test failed, attempting direct request...');
+          // Don't throw error here, let the actual request handle it
         }
 
         // Simulate progress through stages
