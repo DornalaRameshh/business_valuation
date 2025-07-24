@@ -102,57 +102,11 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
     generateValuation();
   }, [wizardData]);
 
-  const getBaseValuation = () => {
-    const industry = wizardData.step1?.industry;
-    const stage = wizardData.step1?.stage;
+  const getValuationRange = () => {
+    if (!valuationReport?.finalValuation?.finalRange) return null;
 
-    let base = 1000000; // $1M base
-
-    // Industry multipliers
-    const industryMultipliers: Record<string, number> = {
-      'saas': 3,
-      'ai': 4,
-      'fintech': 3.5,
-      'healthtech': 2.5,
-      'biotech': 2,
-      'ecommerce': 1.5,
-      'other': 1
-    };
-
-    // Stage multipliers
-    const stageMultipliers: Record<string, number> = {
-      'idea': 0.5,
-      'mvp': 1,
-      'launched': 2,
-      'growth': 4
-    };
-
-    base *= (industryMultipliers[industry] || 1);
-    base *= (stageMultipliers[stage] || 1);
-
-    return base;
-  };
-
-  const adjustValuationBasedOnData = (base: number) => {
-    let adjusted = base;
-
-    // Revenue adjustment
-    if (wizardData.step2?.revenue && wizardData.step2.revenue > 0) {
-      const revenueMultiple = wizardData.step1?.industry === 'saas' ? 8 : 4;
-      adjusted = Math.max(adjusted, wizardData.step2.revenue * revenueMultiple);
-    }
-
-    // Growth adjustment
-    if (wizardData.step3?.growthRate && wizardData.step3.growthRate > 10) {
-      adjusted *= (1 + wizardData.step3.growthRate / 100);
-    }
-
-    // Customer count adjustment
-    if (wizardData.step3?.customerCount && wizardData.step3.customerCount > 1000) {
-      adjusted *= 1.2;
-    }
-
-    return Math.round(adjusted);
+    const { lower, upper } = valuationReport.finalValuation.finalRange;
+    return { lower: lower * 1000000, upper: upper * 1000000 }; // Convert from millions to actual values
   };
 
   const formatCurrency = (amount: number): string => {
@@ -241,7 +195,7 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
           </motion.div>
           
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            🎉 You're all set!
+            �� You're all set!
           </h1>
           <p className="text-xl text-gray-600">
             Your startup valuation is being generated using AI analysis
