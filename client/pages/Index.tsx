@@ -1,5 +1,5 @@
-import { ValuationApp } from '@/components/ValuationApp';
+import { WizardValuationApp } from '@/components/WizardValuationApp';
 
 export default function Index() {
-  return <ValuationApp />;
+  return <WizardValuationApp />;
 }
