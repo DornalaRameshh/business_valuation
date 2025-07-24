@@ -339,23 +339,96 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
           ) : null}
         </motion.div>
 
-        {/* Summary Stats */}
-        {!isGenerating && (
+        {/* Detailed Results */}
+        {!isGenerating && !error && valuationReport && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+            className="space-y-6 mb-8"
           >
-            {getSummaryStats().map((stat, index) => (
-              <div key={index} className="wizard-card p-4 text-center">
-                <stat.icon className={`w-6 h-6 mx-auto mb-2 ${stat.color}`} />
-                <div className="text-sm text-gray-600">{stat.label}</div>
-                <div className="font-semibold text-gray-900 text-sm truncate">
-                  {stat.value}
+            {/* Summary Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {getSummaryStats().map((stat, index) => (
+                <div key={index} className="wizard-card p-4 text-center">
+                  <stat.icon className={`w-6 h-6 mx-auto mb-2 ${stat.color}`} />
+                  <div className="text-sm text-gray-600">{stat.label}</div>
+                  <div className="font-semibold text-gray-900 text-sm truncate">
+                    {stat.value}
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            {/* Business Summary */}
+            <div className="wizard-card p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <Eye className="w-5 w-5 mr-2 text-blue-600" />
+                AI Business Analysis
+              </h3>
+              <div className="space-y-4 text-sm text-gray-700">
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Summary</h4>
+                  <p>{valuationReport.businessSummary.summary}</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Stage Assessment</h4>
+                  <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                    {valuationReport.businessSummary.stageAssessment}
+                  </span>
+                </div>
+                {valuationReport.businessSummary.keyStrengths && (
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-2">Key Strengths</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      {valuationReport.businessSummary.keyStrengths.map((strength, index) => (
+                        <li key={index}>{strength}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-            ))}
+            </div>
+
+            {/* Valuation Methods */}
+            <div className="wizard-card p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <BarChart3 className="w-5 h-5 mr-2 text-green-600" />
+                Valuation Methods Used
+              </h3>
+              <div className="grid gap-4">
+                {valuationReport.calculations.map((calc, index) => (
+                  <div key={index} className="border border-gray-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium text-gray-900">{calc.method}</h4>
+                      <span className="text-lg font-bold text-blue-600">
+                        ${calc.valuationRange.lower}M - ${calc.valuationRange.upper}M
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{calc.explanation}</p>
+                    <details className="text-xs text-gray-500">
+                      <summary className="cursor-pointer hover:text-gray-700">View calculation details</summary>
+                      <div className="mt-2 p-3 bg-gray-50 rounded-lg whitespace-pre-wrap">
+                        {calc.calculation}
+                      </div>
+                    </details>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Strategic Context */}
+            {valuationReport.strategicContext && (
+              <div className="wizard-card p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Zap className="w-5 h-5 mr-2 text-purple-600" />
+                  Strategic Investment Context
+                </h3>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {valuationReport.strategicContext}
+                </p>
+              </div>
+            )}
           </motion.div>
         )}
 
