@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Trophy, CheckCircle, TrendingUp, Users, DollarSign, 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Trophy, CheckCircle, TrendingUp, Users, DollarSign,
   FileText, Download, Share2, RefreshCw, Sparkles,
-  ArrowRight, Clock, Target
+  ArrowRight, Clock, Target, AlertCircle, Brain,
+  BarChart3, Zap, Eye
 } from 'lucide-react';
+import { fastapiService, ValuationReport, WizardData } from '@/lib/fastapi';
 
 interface ConfirmationStepProps {
   wizardData: any;
