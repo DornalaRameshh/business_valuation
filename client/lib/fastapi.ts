@@ -1,7 +1,21 @@
 import axios from 'axios';
 
-// FastAPI backend URL - update this to your actual backend URL
-const FASTAPI_BASE_URL = 'http://localhost:8000';
+// FastAPI backend URL configuration
+const getBackendURL = () => {
+  // Check if we're in development or production
+  const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  if (isDevelopment) {
+    // Local development - connect to local FastAPI server
+    return 'http://127.0.0.1:8000';
+  } else {
+    // Production - you'll need to deploy your FastAPI backend and update this URL
+    // For now, we'll try to connect to the local backend from the cloud (this won't work due to CORS)
+    return 'http://127.0.0.1:8000';
+  }
+};
+
+const FASTAPI_BASE_URL = getBackendURL();
 
 const api = axios.create({
   baseURL: FASTAPI_BASE_URL,
