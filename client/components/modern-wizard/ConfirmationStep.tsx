@@ -477,19 +477,23 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
           
           <button
             onClick={() => {
-              // Mock share functionality
+              const valRange = getValuationRange();
+              const shareText = valRange
+                ? `${wizardData.step1?.businessName} valuation: ${formatCurrency(valRange.lower)} - ${formatCurrency(valRange.upper)}`
+                : `${wizardData.step1?.businessName} valuation analysis complete`;
+
               if (navigator.share) {
                 navigator.share({
                   title: `${wizardData.step1?.businessName} Valuation`,
-                  text: `Check out my startup valuation: ${mockValuation ? formatCurrency(mockValuation) : 'TBD'}`,
+                  text: shareText,
                   url: window.location.href
                 });
               } else {
                 // Fallback to clipboard
-                navigator.clipboard.writeText(`${wizardData.step1?.businessName} valuation: ${mockValuation ? formatCurrency(mockValuation) : 'TBD'}`);
+                navigator.clipboard.writeText(shareText);
               }
             }}
-            disabled={isGenerating}
+            disabled={isGenerating || error}
             className="wizard-button-secondary flex items-center justify-center space-x-2 py-3 px-6"
           >
             <Share2 className="w-5 h-5" />
