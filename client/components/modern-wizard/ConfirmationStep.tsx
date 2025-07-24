@@ -265,36 +265,78 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
           transition={{ delay: 0.7 }}
           className="wizard-card p-8 mb-8 text-center"
         >
-          {isGenerating ? (
+          {error ? (
+            <div className="space-y-4">
+              <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8 text-red-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-red-800">
+                Analysis Error
+              </h3>
+              <p className="text-red-600 max-w-md mx-auto">
+                {error}
+              </p>
+              <button
+                onClick={() => {
+                  setError('');
+                  setIsGenerating(true);
+                  // Retry logic could be added here
+                }}
+                className="wizard-button-primary px-6 py-2"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Try Again
+              </button>
+            </div>
+          ) : isGenerating ? (
             <div className="space-y-4">
               <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto">
-                <Sparkles className="w-8 h-8 text-white animate-pulse" />
+                <Brain className="w-8 h-8 text-white animate-pulse" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900">
-                Analyzing your startup...
+                {getAnalysisStages()[currentStage - 1]}
               </h3>
               <div className="flex items-center justify-center space-x-2 text-gray-600">
                 <Clock className="w-4 h-4" />
-                <span className="text-sm">This usually takes 30-60 seconds</span>
+                <span className="text-sm">Stage {currentStage} of 6</span>
+              </div>
+              <div className="w-full max-w-xs mx-auto bg-gray-200 rounded-full h-2">
+                <motion.div
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(currentStage / 6) * 100}%` }}
+                  transition={{ duration: 0.5 }}
+                />
               </div>
             </div>
-          ) : (
+          ) : valuationReport ? (
             <div className="space-y-6">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-                  Estimated Valuation
+                  Valuation Range
                 </h3>
-                <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {mockValuation ? formatCurrency(mockValuation) : 'Calculating...'}
-                </div>
+                {getValuationRange() ? (
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      {formatCurrency(getValuationRange()!.lower)} - {formatCurrency(getValuationRange()!.upper)}
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Based on {valuationReport.calculations.length} valuation methods
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-3xl font-bold text-gray-600">
+                    Analysis Complete
+                  </div>
+                )}
               </div>
-              
+
               <div className="flex items-center justify-center space-x-2 text-gray-600">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-                <span>Analysis complete</span>
+                <span>Professional analysis complete</span>
               </div>
             </div>
-          )}
+          ) : null}
         </motion.div>
 
         {/* Summary Stats */}
