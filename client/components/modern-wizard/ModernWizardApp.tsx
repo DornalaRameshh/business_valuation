@@ -105,6 +105,12 @@ export function ModernWizardApp() {
     setIsComplete(false);
   };
 
+  // Handle backend URL changes
+  const handleBackendChange = (url: string) => {
+    fastapiService.setBackendUrl(url);
+    console.log('Backend URL changed to:', url);
+  };
+
   if (isComplete) {
     return (
       <ConfirmationStep
@@ -248,8 +254,8 @@ export function ModernWizardApp() {
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div className="flex items-center space-x-4">
               <span>🔒 Your data is secure and private</span>
-              <span>���</span>
-              <span>⚡ Auto-saved as you go</span>
+              <span>•</span>
+              <span>��� Auto-saved as you go</span>
             </div>
             
             <button
