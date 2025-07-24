@@ -157,16 +157,29 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
                 </div>
               </div>
 
-              {/* CORS Warning */}
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg mb-4">
-                <div className="flex items-start space-x-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-sm text-amber-800">
-                    <strong>Note:</strong> If connecting to a local backend from this cloud deployment, 
-                    you may encounter CORS issues. Consider using demo mode for testing.
+              {/* Environment-specific help */}
+              {window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? (
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-4">
+                  <div className="flex items-start space-x-2">
+                    <Globe className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm text-blue-800">
+                      <strong>Cloud Deployment Detected:</strong> Demo Mode is recommended as browsers block
+                      requests from HTTPS sites to localhost. To use your local backend, add CORS headers
+                      or deploy your backend to a cloud service.
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg mb-4">
+                  <div className="flex items-start space-x-2">
+                    <Monitor className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm text-green-800">
+                      <strong>Local Development:</strong> You can connect directly to your FastAPI server
+                      running on localhost:8000.
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="flex space-x-3">
                 <button
