@@ -9,9 +9,8 @@ const getBackendURL = () => {
     // Local development - connect to local FastAPI server
     return 'http://127.0.0.1:8000';
   } else {
-    // Production - you'll need to deploy your FastAPI backend and update this URL
-    // For now, we'll try to connect to the local backend from the cloud (this won't work due to CORS)
-    return 'http://127.0.0.1:8000';
+    // Production/Cloud deployment - default to demo mode to avoid CORS issues
+    return 'demo';
   }
 };
 
