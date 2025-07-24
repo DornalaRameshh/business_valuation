@@ -510,7 +510,7 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
         </motion.div>
 
         {/* Next Steps */}
-        {!isGenerating && (
+        {!isGenerating && !error && valuationReport && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -522,11 +522,23 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
               What's Next?
             </h3>
             <div className="space-y-3 text-sm text-gray-700">
-              <p>• Use this valuation as a starting point for investor discussions</p>
-              <p>• Consider getting a professional valuation for formal fundraising</p>
-              <p>• Update your numbers as your business grows and re-run the analysis</p>
-              <p>• Focus on the key metrics that drive value in your industry</p>
+              <p>• Use this AI-powered valuation as a starting point for investor discussions</p>
+              <p>• Review the detailed calculations and methodology for each valuation method</p>
+              <p>• Consider the competitive analysis to understand your market position</p>
+              <p>• Update your metrics regularly and re-run the analysis as you grow</p>
+              <p>• Share these insights with advisors and potential investors</p>
             </div>
+
+            {valuationReport.finalValuation.recommendations && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-xl">
+                <h4 className="font-medium text-blue-900 mb-2">AI Recommendations</h4>
+                <ul className="space-y-1 text-sm text-blue-800">
+                  {valuationReport.finalValuation.recommendations.map((rec, index) => (
+                    <li key={index}>• {rec}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </motion.div>
         )}
       </div>
