@@ -128,6 +128,7 @@ export function ModernWizardApp() {
   // Handle backend URL changes
   const handleBackendChange = (url: string) => {
     fastapiService.setBackendUrl(url);
+    setCurrentBackendMode(url === 'demo' ? 'Demo Mode' : url === 'http://127.0.0.1:8000' ? 'Local Backend' : 'Custom Backend');
     console.log('Backend URL changed to:', url);
   };
 
