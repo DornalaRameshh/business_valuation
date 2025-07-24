@@ -2,25 +2,15 @@ import axios from "axios";
 
 // FastAPI backend URL configuration
 const getBackendURL = () => {
-  // Check if we're in development or production
-  const isDevelopment =
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1";
-
-  if (isDevelopment) {
-    // Local development - connect to local FastAPI server
-    return "http://127.0.0.1:8000";
-  } else {
-    // Production/Cloud deployment - default to demo mode to avoid CORS issues
-    return "demo";
-  }
+  // Always use local FastAPI backend for development integration
+  return "http://127.0.0.1:8000";
 };
 
 const FASTAPI_BASE_URL = getBackendURL();
 
 const api = axios.create({
   baseURL: FASTAPI_BASE_URL,
-  timeout: 60000, // 60 seconds for AI processing
+  timeout: 0, // No timeout
   headers: {
     "Content-Type": "application/json",
   },
@@ -100,8 +90,8 @@ export interface ValuationReport {
   businessSummary: {
     summary: string;
     stageAssessment: string;
-    keyStrengths: string[];
-    weaknessesOrRisks: string[];
+    keyStrengths?: string[];
+    weaknessesOrRisks?: string[];
   };
   recommendedMethods: {
     recommendedMethods: Array<{
@@ -120,20 +110,20 @@ export interface ValuationReport {
     calculation: string;
     narrative: string;
   }>;
-  competitorAnalysis: {
-    competitors: string[];
-    competitorBenchmarks: any[];
-    commentary: string;
+  competitorAnalysis?: {
+    competitors?: string[];
+    competitorBenchmarks?: any[];
+    commentary?: string;
   };
-  strategicContext: string;
+  strategicContext?: string;
   finalValuation: {
     finalRange: {
       lower: number;
       upper: number;
     };
-    methodComparisons: string;
-    justification: string;
-    recommendations: string[];
+    methodComparisons?: string;
+    justification?: string;
+    recommendations?: string[];
   };
 }
 
@@ -357,3 +347,64 @@ export const fastapiService = {
     }
   },
 };
+
+// Streamed valuation report (chunked)
+export async function streamValuationReport(wizardData: WizardData, onChunk: (chunk: any) => void) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
+  
+  try {
+    const response = await fetch('http://127.0.0.1:8000/valuation-report-stream', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(wizardData),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('No response body reader available');
+    }
+    
+    const decoder = new TextDecoder();
+    let buffer = '';
+    
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      
+      buffer += decoder.decode(value, { stream: true });
+      let lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+      
+      for (const line of lines) {
+        if (line.trim()) {
+          try {
+            const chunk = JSON.parse(line);
+            if (chunk.error) {
+              throw new Error(chunk.message || 'Analysis failed');
+            }
+            onChunk(chunk);
+          } catch (e) {
+            if (e instanceof SyntaxError) {
+              console.error('Failed to parse chunk:', line, e);
+            } else {
+              throw e;
+            }
+          }
+        }
+      }
+    }
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('Analysis is taking longer than expected. Please try again.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}

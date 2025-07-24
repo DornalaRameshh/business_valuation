@@ -20,7 +20,8 @@ import {
   Zap,
   Eye,
 } from "lucide-react";
-import { fastapiService, ValuationReport, WizardData } from "@/lib/fastapi";
+import { fastapiService, ValuationReport, WizardData, streamValuationReport } from "@/lib/fastapi";
+import { generateValuationPDF } from "@/lib/pdfGenerator";
 
 interface ConfirmationStepProps {
   wizardData: WizardData;
@@ -39,6 +40,7 @@ export function ConfirmationStep({
     useState<ValuationReport | null>(null);
   const [error, setError] = useState<string>("");
   const [currentStage, setCurrentStage] = useState(1);
+  const [statusMessage, setStatusMessage] = useState<string>("Initializing analysis...");
 
   // Calculate confidence score based on data completeness
   useEffect(() => {
@@ -82,46 +84,54 @@ export function ConfirmationStep({
 
   // Generate real valuation using FastAPI backend
   useEffect(() => {
-    const generateValuation = async () => {
+    let report: any = {};
+    setIsGenerating(true);
+    setError("");
+    setValuationReport(null);
+    setCurrentStage(1);
+
+    streamValuationReport(wizardData, (chunk) => {
       try {
-        setIsGenerating(true);
-        setError("");
-
-        // Test connection first (but don't fail immediately)
-        const canConnect = await fastapiService.testConnection();
-        if (!canConnect) {
-          console.warn(
-            "Backend connection test failed, attempting direct request...",
-          );
-          // Don't throw error here, let the actual request handle it
+        // Handle status messages
+        if (chunk.status === "starting" && chunk.message) {
+          setStatusMessage(chunk.message);
+          setCurrentStage(chunk.stage);
+          return;
         }
 
-        // Simulate progress through stages
-        const stages = [
-          "Analyzing business model...",
-          "Identifying valuation methods...",
-          "Performing detailed calculations...",
-          "Analyzing competitors...",
-          "Generating strategic insights...",
-          "Finalizing valuation report...",
-        ];
-
-        for (let i = 0; i < stages.length; i++) {
-          setCurrentStage(i + 1);
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Handle actual data
+        if (chunk.stage === 1 && chunk.businessSummary) {
+          report.businessSummary = chunk.businessSummary;
+          setCurrentStage(1);
+        } else if (chunk.stage === 2 && chunk.recommendedMethods) {
+          report.recommendedMethods = chunk.recommendedMethods;
+          setCurrentStage(2);
+        } else if (chunk.stage === 3 && chunk.calculation) {
+          if (!report.calculations) report.calculations = [];
+          report.calculations.push(chunk.calculation);
+          setCurrentStage(3);
+        } else if (chunk.stage === 4 && chunk.competitorAnalysis) {
+          report.competitorAnalysis = chunk.competitorAnalysis;
+          setCurrentStage(4);
+        } else if (chunk.stage === 5 && chunk.strategicContext) {
+          report.strategicContext = chunk.strategicContext;
+          setCurrentStage(5);
+        } else if (chunk.stage === 6 && chunk.finalValuation) {
+          report.finalValuation = chunk.finalValuation;
+          setCurrentStage(6);
+          setValuationReport(report as ValuationReport);
+          setIsGenerating(false);
         }
-
-        const report = await fastapiService.generateValuationReport(wizardData);
-        setValuationReport(report);
-        setIsGenerating(false);
-      } catch (error: any) {
-        console.error("Valuation generation error:", error);
-        setError(error.message);
+      } catch (err) {
+        console.error('Error processing chunk:', err);
+        setError("Error processing analysis data. Please try again.");
         setIsGenerating(false);
       }
-    };
-
-    generateValuation();
+    }).catch((error) => {
+      console.error('Streaming error:', error);
+      setError(error.message || "Analysis failed. Please try again.");
+      setIsGenerating(false);
+    });
   }, [wizardData]);
 
   const getValuationRange = () => {
@@ -318,7 +328,7 @@ export function ConfirmationStep({
                 <Brain className="w-8 h-8 text-white animate-pulse" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900">
-                {getAnalysisStages()[currentStage - 1]}
+                {statusMessage || getAnalysisStages()[currentStage - 1]}
               </h3>
               <div className="flex items-center justify-center space-x-2 text-gray-600">
                 <Clock className="w-4 h-4" />
@@ -346,7 +356,7 @@ export function ConfirmationStep({
                       {formatCurrency(getValuationRange()!.upper)}
                     </div>
                     <p className="text-sm text-gray-600">
-                      Based on {valuationReport.calculations.length} valuation
+                      Based on {valuationReport.calculations?.length || 0} valuation
                       methods
                     </p>
                   </div>
@@ -362,7 +372,17 @@ export function ConfirmationStep({
                 <span>Professional analysis complete</span>
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div className="space-y-4">
+              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900">
+                Waiting for analysis...
+              </h3>
+              <p className="text-gray-600">Debug: isGenerating={isGenerating.toString()}, error={error || 'none'}, report={valuationReport ? 'exists' : 'null'}</p>
+            </div>
+          )}
         </motion.div>
 
         {/* Detailed Results */}
@@ -484,38 +504,13 @@ export function ConfirmationStep({
           <button
             onClick={() => {
               if (!valuationReport) return;
-
-              const reportData = {
-                businessName: wizardData.step1?.businessName,
-                generatedAt: new Date().toISOString(),
-                confidence: confidence,
-                inputData: wizardData,
-                valuationReport: valuationReport,
-                summary: {
-                  finalRange: valuationReport.finalValuation.finalRange,
-                  methodsUsed: valuationReport.calculations.length,
-                  stageAssessment:
-                    valuationReport.businessSummary.stageAssessment,
-                },
-              };
-
-              const blob = new Blob([JSON.stringify(reportData, null, 2)], {
-                type: "application/json",
-              });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = `${wizardData.step1?.businessName || "startup"}-valuation-report.json`;
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              URL.revokeObjectURL(url);
+              generateValuationPDF(wizardData, valuationReport, confidence);
             }}
             disabled={isGenerating || error || !valuationReport}
             className="wizard-button-primary flex items-center justify-center space-x-2 py-3 px-6 text-lg font-semibold"
           >
             <Download className="w-5 h-5" />
-            <span>Download Report</span>
+            <span>Download PDF Report</span>
           </button>
 
           <button
