@@ -34,13 +34,32 @@ export function ModernWizardApp() {
     try {
       const savedData = localStorage.getItem('wizardData');
       const savedStep = localStorage.getItem('currentStep');
-      
+      const savedBackendMode = localStorage.getItem('backendMode');
+      const savedBackendUrl = localStorage.getItem('customBackendUrl');
+
       if (savedData) {
         setWizardData(JSON.parse(savedData));
       }
-      
+
       if (savedStep) {
         setCurrentStep(parseInt(savedStep, 10));
+      }
+
+      // Initialize backend URL based on saved preferences or environment
+      if (savedBackendMode === 'custom' && savedBackendUrl) {
+        fastapiService.setBackendUrl(savedBackendUrl);
+      } else if (savedBackendMode === 'demo') {
+        fastapiService.setBackendUrl('demo');
+      } else if (savedBackendMode === 'local') {
+        fastapiService.setBackendUrl('http://127.0.0.1:8000');
+      } else {
+        // Auto-detect based on environment
+        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const defaultUrl = isDevelopment ? 'http://127.0.0.1:8000' : 'demo';
+        fastapiService.setBackendUrl(defaultUrl);
+
+        // Save the default choice
+        localStorage.setItem('backendMode', isDevelopment ? 'local' : 'demo');
       }
     } catch (error) {
       console.error('Error loading saved data:', error);
