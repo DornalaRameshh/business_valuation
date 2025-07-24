@@ -9,7 +9,7 @@ import {
 import { fastapiService, ValuationReport, WizardData } from '@/lib/fastapi';
 
 interface ConfirmationStepProps {
-  wizardData: any;
+  wizardData: WizardData;
   onStartOver: () => void;
   userID: string;
 }
@@ -17,7 +17,9 @@ interface ConfirmationStepProps {
 export function ConfirmationStep({ wizardData, onStartOver, userID }: ConfirmationStepProps) {
   const [confidence, setConfidence] = useState(0);
   const [isGenerating, setIsGenerating] = useState(true);
-  const [mockValuation, setMockValuation] = useState<number | null>(null);
+  const [valuationReport, setValuationReport] = useState<ValuationReport | null>(null);
+  const [error, setError] = useState<string>('');
+  const [currentStage, setCurrentStage] = useState(1);
 
   // Calculate confidence score based on data completeness
   useEffect(() => {
