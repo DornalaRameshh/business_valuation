@@ -33,10 +33,17 @@ export function BackendConfig({ onBackendChange }: BackendConfigProps) {
   useEffect(() => {
     const savedMode = localStorage.getItem('backendMode');
     const savedUrl = localStorage.getItem('customBackendUrl');
-    
+
+    // Auto-detect environment and suggest appropriate mode
+    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
     if (savedMode) {
       setSelectedMode(savedMode as any);
+    } else {
+      // Default to demo mode for cloud deployments
+      setSelectedMode(isDevelopment ? 'local' : 'demo');
     }
+
     if (savedUrl) {
       setCustomUrl(savedUrl);
     }
