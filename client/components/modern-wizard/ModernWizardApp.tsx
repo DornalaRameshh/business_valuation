@@ -28,6 +28,7 @@ export function ModernWizardApp() {
   const [wizardData, setWizardData] = useState<WizardData>({});
   const [userID] = useState(`user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const [isComplete, setIsComplete] = useState(false);
+  const [currentBackendMode, setCurrentBackendMode] = useState<string>('demo');
 
   // Load saved data from localStorage on mount
   useEffect(() => {
