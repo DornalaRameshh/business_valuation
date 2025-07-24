@@ -49,15 +49,19 @@ export function ModernWizardApp() {
       // Initialize backend URL based on saved preferences or environment
       if (savedBackendMode === 'custom' && savedBackendUrl) {
         fastapiService.setBackendUrl(savedBackendUrl);
+        setCurrentBackendMode('Custom Backend');
       } else if (savedBackendMode === 'demo') {
         fastapiService.setBackendUrl('demo');
+        setCurrentBackendMode('Demo Mode');
       } else if (savedBackendMode === 'local') {
         fastapiService.setBackendUrl('http://127.0.0.1:8000');
+        setCurrentBackendMode('Local Backend');
       } else {
         // Auto-detect based on environment
         const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
         const defaultUrl = isDevelopment ? 'http://127.0.0.1:8000' : 'demo';
         fastapiService.setBackendUrl(defaultUrl);
+        setCurrentBackendMode(isDevelopment ? 'Local Backend' : 'Demo Mode');
 
         // Save the default choice
         localStorage.setItem('backendMode', isDevelopment ? 'local' : 'demo');
