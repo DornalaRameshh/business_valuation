@@ -61,17 +61,45 @@ export function ConfirmationStep({ wizardData, onStartOver, userID }: Confirmati
     return () => clearTimeout(timer);
   }, [wizardData]);
 
-  // Generate mock valuation
+  // Generate real valuation using FastAPI backend
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // Mock valuation based on industry and stage
-      const baseValuation = getBaseValuation();
-      const adjustedValuation = adjustValuationBasedOnData(baseValuation);
-      setMockValuation(adjustedValuation);
-      setIsGenerating(false);
-    }, 3000);
+    const generateValuation = async () => {
+      try {
+        setIsGenerating(true);
+        setError('');
 
-    return () => clearTimeout(timer);
+        // Test connection first
+        const canConnect = await fastapiService.testConnection();
+        if (!canConnect) {
+          throw new Error('Backend server is not running. Please start your FastAPI server.');
+        }
+
+        // Simulate progress through stages
+        const stages = [
+          'Analyzing business model...',
+          'Identifying valuation methods...',
+          'Performing detailed calculations...',
+          'Analyzing competitors...',
+          'Generating strategic insights...',
+          'Finalizing valuation report...'
+        ];
+
+        for (let i = 0; i < stages.length; i++) {
+          setCurrentStage(i + 1);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        const report = await fastapiService.generateValuationReport(wizardData);
+        setValuationReport(report);
+        setIsGenerating(false);
+      } catch (error: any) {
+        console.error('Valuation generation error:', error);
+        setError(error.message);
+        setIsGenerating(false);
+      }
+    };
+
+    generateValuation();
   }, [wizardData]);
 
   const getBaseValuation = () => {
