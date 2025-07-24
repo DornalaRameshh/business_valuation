@@ -176,20 +176,101 @@ function transformWizardDataToBackend(wizardData: WizardData): any {
   return payload;
 }
 
+// Demo data fallback
+const generateDemoReport = (wizardData: WizardData): ValuationReport => {
+  const businessName = wizardData.step1?.businessName || 'Demo Company';
+  const industry = wizardData.step1?.industry || 'saas';
+
+  return {
+    businessSummary: {
+      summary: `${businessName} is a ${industry} startup with promising market potential. The company demonstrates strong fundamentals and is positioned well within its industry sector.`,
+      stageAssessment: 'Growth',
+      keyStrengths: [
+        'Strong market opportunity',
+        'Experienced founding team',
+        'Clear value proposition',
+        'Scalable business model'
+      ],
+      weaknessesOrRisks: [
+        'Competitive market landscape',
+        'Customer acquisition costs',
+        'Market timing considerations'
+      ]
+    },
+    recommendedMethods: {
+      recommendedMethods: [
+        { method: 'Revenue Multiple', confidence: 0.85, reason: 'Strong revenue metrics available' },
+        { method: 'DCF Analysis', confidence: 0.78, reason: 'Predictable cash flow patterns' },
+        { method: 'Market Comparable', confidence: 0.72, reason: 'Good comparable companies exist' }
+      ]
+    },
+    calculations: [
+      {
+        method: 'Revenue Multiple',
+        valuationRange: { lower: 8, upper: 12 },
+        explanation: 'Based on industry revenue multiples and growth projections',
+        calculation: 'Annual Revenue × Industry Multiple (4-6x) × Growth Factor (2x)',
+        narrative: 'This method values the company based on revenue multiples from comparable companies.'
+      },
+      {
+        method: 'DCF Analysis',
+        valuationRange: { lower: 10, upper: 15 },
+        explanation: 'Discounted cash flow analysis over 5-year period',
+        calculation: 'NPV of projected cash flows with 12% discount rate',
+        narrative: 'DCF provides intrinsic value based on projected cash generation capability.'
+      }
+    ],
+    competitorAnalysis: {
+      competitors: ['CompetitorA', 'CompetitorB', 'CompetitorC'],
+      competitorBenchmarks: [],
+      commentary: 'The competitive landscape shows healthy market dynamics with room for multiple players.'
+    },
+    strategicContext: 'This valuation reflects strong growth potential in a expanding market. The company is well-positioned to capture market share and scale operations effectively.',
+    finalValuation: {
+      finalRange: { lower: 9, upper: 14 },
+      methodComparisons: 'Revenue multiple and DCF methods show convergent ranges',
+      justification: 'Valuation reflects current metrics with growth potential upside',
+      recommendations: [
+        'Focus on customer acquisition efficiency',
+        'Strengthen unit economics',
+        'Build strategic partnerships',
+        'Prepare for next funding round'
+      ]
+    }
+  };
+};
+
+let currentBackendUrl = FASTAPI_BASE_URL;
+
 export const fastapiService = {
+  setBackendUrl(url: string) {
+    currentBackendUrl = url;
+    api.defaults.baseURL = url === 'demo' ? '' : url;
+  },
+
   async generateValuationReport(wizardData: WizardData): Promise<ValuationReport> {
+    // Demo mode
+    if (currentBackendUrl === 'demo') {
+      console.log('Using demo mode - generating mock report');
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      return generateDemoReport(wizardData);
+    }
+
     try {
       const payload = transformWizardDataToBackend(wizardData);
       console.log('Sending payload to FastAPI:', payload);
-      
+
       const response = await api.post<ValuationReport>('/valuation-report', payload);
       return response.data;
     } catch (error: any) {
       console.error('FastAPI valuation error:', error);
-      
-      // Enhanced error handling
-      if (error.code === 'ECONNREFUSED') {
-        throw new Error('Backend server is not running. Please start your FastAPI server on port 8000.');
+
+      // Enhanced error handling with CORS-specific messages
+      if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+        throw new Error('Cannot connect to backend server. This might be due to CORS restrictions when connecting from a cloud deployment to localhost. Try using Demo Mode instead.');
+      } else if (error.code === 'ECONNREFUSED') {
+        throw new Error('Backend server is not running. Please start your FastAPI server or use Demo Mode.');
       } else if (error.response?.status === 500) {
         const detail = error.response?.data?.detail;
         if (typeof detail === 'object' && detail.error) {
@@ -201,15 +282,19 @@ export const fastapiService = {
       } else if (error.message?.includes('timeout')) {
         throw new Error('Analysis is taking longer than expected. Please try again.');
       }
-      
+
       throw new Error(error.response?.data?.detail || error.message || 'Failed to generate valuation report');
     }
   },
 
   async testConnection(): Promise<boolean> {
+    if (currentBackendUrl === 'demo') {
+      return true;
+    }
+
     try {
       // Test if FastAPI backend is running
-      const response = await fetch(`${FASTAPI_BASE_URL}/docs`);
+      const response = await fetch(`${currentBackendUrl}/docs`);
       return response.ok;
     } catch (error) {
       console.error('FastAPI connection test failed:', error);
