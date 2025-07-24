@@ -5,7 +5,9 @@ import { Step2FinancialSnapshot } from './Step2FinancialSnapshot';
 import { Step3ProductTraction } from './Step3ProductTraction';
 import { Step4AIExtras } from './Step4AIExtras';
 import { ConfirmationStep } from './ConfirmationStep';
+import { BackendConfig } from '../BackendConfig';
 import { CheckCircle, Circle } from 'lucide-react';
+import { fastapiService } from '@/lib/fastapi';
 
 interface WizardData {
   step1?: any;
@@ -246,7 +248,7 @@ export function ModernWizardApp() {
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div className="flex items-center space-x-4">
               <span>🔒 Your data is secure and private</span>
-              <span>•</span>
+              <span>���</span>
               <span>⚡ Auto-saved as you go</span>
             </div>
             
