@@ -228,53 +228,51 @@ export function Step2FinancialSnapshot({
           >
             <DollarSign className="w-6 h-6 text-white" />
           </motion.div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            💰 Tell us about your finances
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            💰 Financial snapshot
           </h1>
-          <p className="text-gray-600">
-            We keep it confidential and use this to provide more accurate
-            valuations
+          <p className="text-sm text-gray-600">
+            Confidential - helps provide accurate valuations
           </p>
         </div>
 
         {/* Skip Option */}
-        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-amber-800">
-                Not ready to share financials?
+                Not ready to share?
               </p>
               <p className="text-xs text-amber-700">
-                You can skip this step and we'll estimate based on your industry
-                and stage
+                Skip & we'll estimate from industry data
               </p>
             </div>
             <button
               type="button"
               onClick={handleSkipToggle}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 skipMode
                   ? "bg-amber-200 text-amber-800"
                   : "bg-white text-amber-700 border border-amber-200"
               }`}
             >
-              {skipMode ? "Fill Details" : "Skip This Step"}
+              {skipMode ? "Fill" : "Skip"}
             </button>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <AnimatePresence>
             {!skipMode && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="space-y-6"
+                className="space-y-4"
               >
                 {/* Privacy Toggle */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span className="text-sm text-gray-700">
+                <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                  <span className="text-xs text-gray-700">
                     Show values as you type
                   </span>
                   <button
