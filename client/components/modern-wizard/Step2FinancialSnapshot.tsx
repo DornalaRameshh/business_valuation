@@ -162,13 +162,13 @@ export function Step2FinancialSnapshot({
     tooltipKey: keyof TooltipData,
     isOptional = false,
   ) => (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="flex items-center justify-between">
         <label className="flex items-center space-x-2 text-sm font-medium text-gray-900">
           <span>{label}</span>
           {renderTooltip(tooltipKey)}
           {isOptional && (
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
               Optional
             </span>
           )}
@@ -216,17 +216,17 @@ export function Step2FinancialSnapshot({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="wizard-card p-8"
+        className="wizard-card p-6"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3"
           >
-            <DollarSign className="w-8 h-8 text-white" />
+            <DollarSign className="w-6 h-6 text-white" />
           </motion.div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             💰 Tell us about your finances
