@@ -181,24 +181,23 @@ export function Step4AIExtras({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="wizard-card p-8"
+        className="wizard-card p-6"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3"
           >
-            <Brain className="w-8 h-8 text-white" />
+            <Brain className="w-6 h-6 text-white" />
           </motion.div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            🧠 Upload files or links to boost accuracy
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            🧠 AI Boost (Optional)
           </h1>
-          <p className="text-gray-600">
-            Optional but recommended - helps our AI provide more precise
-            valuations
+          <p className="text-sm text-gray-600">
+            Upload files/links for more precise valuations
           </p>
         </div>
 
