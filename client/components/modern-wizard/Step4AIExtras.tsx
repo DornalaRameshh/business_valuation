@@ -203,27 +203,26 @@ export function Step4AIExtras({
         </div>
 
         {/* Skip Option */}
-        <div className="mb-8 p-4 bg-indigo-50 border border-indigo-200 rounded-2xl">
+        <div className="mb-4 p-3 bg-indigo-50 border border-indigo-200 rounded-xl">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-indigo-800">
-                Want to skip the extras?
+                Skip the extras?
               </p>
               <p className="text-xs text-indigo-700">
-                We can generate your valuation with the info you've already
-                provided
+                Generate valuation with current info
               </p>
             </div>
             <button
               type="button"
               onClick={handleSkipToggle}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 skipMode
                   ? "bg-indigo-200 text-indigo-800"
                   : "bg-white text-indigo-700 border border-indigo-200"
               }`}
             >
-              {skipMode ? "Add Details" : "Skip This Step"}
+              {skipMode ? "Add" : "Skip"}
             </button>
           </div>
         </div>
