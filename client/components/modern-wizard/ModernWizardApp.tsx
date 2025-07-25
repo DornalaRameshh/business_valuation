@@ -160,22 +160,22 @@ export function ModernWizardApp() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Progress Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
+        <div className="max-w-4xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">
+              <h1 className="text-lg font-bold text-gray-900">
                 AI-Powered Startup Valuation
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs text-gray-600">
                 Step {currentStep} of {steps.length}
               </p>
             </div>
 
             <div className="text-right">
-              <div className="text-sm text-gray-600 mb-1">
+              <div className="text-xs text-gray-600 mb-1">
                 {Math.round(getProgressPercentage())}% Complete
               </div>
-              <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
                   initial={{ width: 0 }}
@@ -203,9 +203,9 @@ export function ModernWizardApp() {
                       )}
                     </div>
 
-                    <div className="ml-3 hidden sm:block">
+                    <div className="ml-2 hidden sm:block">
                       <div
-                        className={`text-sm font-medium ${
+                        className={`text-xs font-medium ${
                           status === "current"
                             ? "text-blue-600"
                             : status === "completed"
@@ -217,7 +217,7 @@ export function ModernWizardApp() {
                       </div>
                     </div>
 
-                    <div className="ml-3 sm:hidden">
+                    <div className="ml-2 sm:hidden">
                       <div
                         className={`text-xs font-medium ${
                           status === "current"
@@ -234,7 +234,7 @@ export function ModernWizardApp() {
 
                   {!isLast && (
                     <div
-                      className={`flex-1 h-px mx-4 transition-colors duration-300 ${
+                      className={`flex-1 h-px mx-3 transition-colors duration-300 ${
                         status === "completed" ? "bg-green-300" : "bg-gray-200"
                       }`}
                     />
@@ -247,7 +247,7 @@ export function ModernWizardApp() {
       </div>
 
       {/* Step Content */}
-      <div className="py-8">
+      <div className="py-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -296,9 +296,9 @@ export function ModernWizardApp() {
       </div>
 
       {/* Footer */}
-      <div className="bg-white border-t border-gray-200 py-4">
+      <div className="bg-white border-t border-gray-200 py-3">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="flex items-center justify-between text-sm text-gray-600">
+          <div className="flex items-center justify-between text-xs text-gray-600">
             <div className="flex items-center space-x-4">
               <span>🔒 Your data is secure and private</span>
               <span>•</span>
