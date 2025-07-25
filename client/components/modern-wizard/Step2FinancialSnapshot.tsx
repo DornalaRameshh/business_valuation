@@ -162,13 +162,13 @@ export function Step2FinancialSnapshot({
     tooltipKey: keyof TooltipData,
     isOptional = false,
   ) => (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="flex items-center justify-between">
         <label className="flex items-center space-x-2 text-sm font-medium text-gray-900">
           <span>{label}</span>
           {renderTooltip(tooltipKey)}
           {isOptional && (
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
               Optional
             </span>
           )}
@@ -216,65 +216,63 @@ export function Step2FinancialSnapshot({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="wizard-card p-8"
+        className="wizard-card p-6"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3"
           >
-            <DollarSign className="w-8 h-8 text-white" />
+            <DollarSign className="w-6 h-6 text-white" />
           </motion.div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            💰 Tell us about your finances
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            💰 Financial snapshot
           </h1>
-          <p className="text-gray-600">
-            We keep it confidential and use this to provide more accurate
-            valuations
+          <p className="text-sm text-gray-600">
+            Confidential - helps provide accurate valuations
           </p>
         </div>
 
         {/* Skip Option */}
-        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-amber-800">
-                Not ready to share financials?
+                Not ready to share?
               </p>
               <p className="text-xs text-amber-700">
-                You can skip this step and we'll estimate based on your industry
-                and stage
+                Skip & we'll estimate from industry data
               </p>
             </div>
             <button
               type="button"
               onClick={handleSkipToggle}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 skipMode
                   ? "bg-amber-200 text-amber-800"
                   : "bg-white text-amber-700 border border-amber-200"
               }`}
             >
-              {skipMode ? "Fill Details" : "Skip This Step"}
+              {skipMode ? "Fill" : "Skip"}
             </button>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <AnimatePresence>
             {!skipMode && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="space-y-6"
+                className="space-y-4"
               >
                 {/* Privacy Toggle */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span className="text-sm text-gray-700">
+                <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                  <span className="text-xs text-gray-700">
                     Show values as you type
                   </span>
                   <button

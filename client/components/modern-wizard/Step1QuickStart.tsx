@@ -158,30 +158,29 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="wizard-card p-8"
+        className="wizard-card p-6"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3"
           >
-            <Rocket className="w-8 h-8 text-white" />
+            <Rocket className="w-6 h-6 text-white" />
           </motion.div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            👋 Welcome! Let's begin with the basics
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            👋 Let's get started!
           </h1>
-          <p className="text-gray-600">
-            Just a few quick questions to get started - this should take less
-            than 2 minutes
+          <p className="text-sm text-gray-600">
+            Quick basics - takes less than 2 minutes
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Business Name */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="block text-sm font-medium text-gray-900">
               Business Name
             </label>
@@ -202,7 +201,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
           </div>
 
           {/* Country */}
-          <div className="space-y-2 relative">
+          <div className="space-y-1 relative">
             <label className="block text-sm font-medium text-gray-900">
               Country
             </label>
@@ -270,7 +269,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
           </div>
 
           {/* Industry */}
-          <div className="space-y-2 relative">
+          <div className="space-y-1 relative">
             <label className="block text-sm font-medium text-gray-900">
               Industry
             </label>
@@ -329,7 +328,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
           </div>
 
           {/* Business Stage */}
-          <div className="space-y-2 relative">
+          <div className="space-y-1 relative">
             <label className="block text-sm font-medium text-gray-900">
               Business Stage
             </label>
@@ -393,7 +392,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
           </div>
 
           {/* Product Launched */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-900">
               Product Launched?
             </label>
@@ -403,28 +402,28 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
                 onClick={() =>
                   setValue("isLaunched", false, { shouldValidate: true })
                 }
-                className={`flex-1 flex items-center justify-center space-x-2 p-4 rounded-2xl border-2 transition-all ${
+                className={`flex-1 flex items-center justify-center space-x-2 p-3 rounded-xl border-2 transition-all ${
                   watchedValues.isLaunched === false
                     ? "border-blue-500 bg-blue-50 text-blue-700"
                     : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <span className="text-2xl">🚫</span>
-                <span className="font-medium">No</span>
+                <span className="text-lg">🚫</span>
+                <span className="font-medium text-sm">No</span>
               </button>
               <button
                 type="button"
                 onClick={() =>
                   setValue("isLaunched", true, { shouldValidate: true })
                 }
-                className={`flex-1 flex items-center justify-center space-x-2 p-4 rounded-2xl border-2 transition-all ${
+                className={`flex-1 flex items-center justify-center space-x-2 p-3 rounded-xl border-2 transition-all ${
                   watchedValues.isLaunched === true
                     ? "border-blue-500 bg-blue-50 text-blue-700"
                     : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
                 }`}
               >
-                <span className="text-2xl">✅</span>
-                <span className="font-medium">Yes</span>
+                <span className="text-lg">✅</span>
+                <span className="font-medium text-sm">Yes</span>
               </button>
             </div>
           </div>
@@ -435,7 +434,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
             disabled={!isValid}
             whileHover={{ scale: isValid ? 1.02 : 1 }}
             whileTap={{ scale: isValid ? 0.98 : 1 }}
-            className={`w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all ${
+            className={`w-full py-3 px-6 rounded-xl font-semibold transition-all ${
               isValid
                 ? "wizard-button-primary"
                 : "bg-gray-200 text-gray-500 cursor-not-allowed"
@@ -446,10 +445,8 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
         </form>
 
         {/* Auto-save indicator */}
-        <div className="mt-4 text-center">
-          <p className="text-xs text-gray-500">
-            🔒 Your progress is automatically saved
-          </p>
+        <div className="mt-3 text-center">
+          <p className="text-xs text-gray-500">🔒 Auto-saved</p>
         </div>
       </motion.div>
     </div>
