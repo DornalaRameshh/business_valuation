@@ -446,9 +446,7 @@ export function Step1QuickStart({ onNext, initialData, onSave }: Step1Props) {
 
         {/* Auto-save indicator */}
         <div className="mt-3 text-center">
-          <p className="text-xs text-gray-500">
-            🔒 Auto-saved
-          </p>
+          <p className="text-xs text-gray-500">🔒 Auto-saved</p>
         </div>
       </motion.div>
     </div>

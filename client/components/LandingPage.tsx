@@ -3,19 +3,19 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Sparkles, 
-  TrendingUp, 
-  Shield, 
-  Zap, 
-  BarChart3, 
-  Brain, 
-  CheckCircle, 
+import {
+  Sparkles,
+  TrendingUp,
+  Shield,
+  Zap,
+  BarChart3,
+  Brain,
+  CheckCircle,
   ArrowRight,
   DollarSign,
   Users,
   Target,
-  Award
+  Award,
 } from "lucide-react";
 
 interface LandingPageProps {
@@ -35,31 +35,35 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
     {
       icon: Brain,
       title: "AI-Powered Analysis",
-      description: "Advanced algorithms analyze your startup's potential using industry data and market trends",
+      description:
+        "Advanced algorithms analyze your startup's potential using industry data and market trends",
       color: "text-purple-600",
-      bgColor: "bg-purple-50"
+      bgColor: "bg-purple-50",
     },
     {
       icon: TrendingUp,
       title: "Market Intelligence",
-      description: "Get insights based on real market data and comparable company valuations",
+      description:
+        "Get insights based on real market data and comparable company valuations",
       color: "text-blue-600",
-      bgColor: "bg-blue-50"
+      bgColor: "bg-blue-50",
     },
     {
       icon: BarChart3,
       title: "Financial Projections",
-      description: "Generate detailed financial forecasts and growth scenarios for your business",
+      description:
+        "Generate detailed financial forecasts and growth scenarios for your business",
       color: "text-green-600",
-      bgColor: "bg-green-50"
+      bgColor: "bg-green-50",
     },
     {
       icon: Shield,
       title: "Data Security",
-      description: "Your sensitive business data is encrypted and never stored permanently",
+      description:
+        "Your sensitive business data is encrypted and never stored permanently",
       color: "text-indigo-600",
-      bgColor: "bg-indigo-50"
-    }
+      bgColor: "bg-indigo-50",
+    },
   ];
 
   const benefits = [
@@ -68,24 +72,21 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
     "Identify key growth opportunities and metrics",
     "Prepare for investor conversations with confidence",
     "Track valuation changes over time",
-    "Access industry benchmarks and comparisons"
+    "Access industry benchmarks and comparisons",
   ];
 
   const stats = [
     { icon: DollarSign, value: "$2.5B+", label: "Total Valuations Processed" },
     { icon: Users, value: "10K+", label: "Startups Analyzed" },
     { icon: Target, value: "95%", label: "Accuracy Rate" },
-    { icon: Award, value: "4.9/5", label: "User Rating" }
+    { icon: Award, value: "4.9/5", label: "User Rating" },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4">
-        <motion.div 
-          className="absolute inset-0 opacity-30"
-          style={{ y }}
-        >
+        <motion.div className="absolute inset-0 opacity-30" style={{ y }}>
           <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mix-blend-multiply filter blur-xl animate-float" />
           <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-r from-yellow-400 to-red-400 rounded-full mix-blend-multiply filter blur-xl animate-float-delayed" />
           <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-gradient-to-r from-green-400 to-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-float" />
@@ -124,8 +125,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            Get an accurate, AI-powered valuation of your startup in just 4 simple steps. 
-            Trusted by thousands of entrepreneurs and backed by industry data.
+            Get an accurate, AI-powered valuation of your startup in just 4
+            simple steps. Trusted by thousands of entrepreneurs and backed by
+            industry data.
           </motion.p>
 
           <motion.div
@@ -134,15 +136,15 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 30 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
-            <Button 
+            <Button
               onClick={onGetStarted}
-              size="lg" 
+              size="lg"
               className="wizard-button-primary px-8 py-4 text-lg font-semibold group"
             >
               Start Your Valuation
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            
+
             <div className="flex items-center text-sm text-gray-500">
               <Zap className="w-4 h-4 mr-2 text-yellow-500" />
               Takes only 5 minutes
@@ -166,7 +168,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 <div className="flex justify-center mb-2">
                   <stat.icon className="w-8 h-8 text-blue-600" />
                 </div>
-                <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                <div className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
+                  {stat.value}
+                </div>
                 <div className="text-sm text-gray-600">{stat.label}</div>
               </motion.div>
             ))}
@@ -199,7 +203,8 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               Why Choose Our Platform?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Built with cutting-edge AI and trusted by thousands of entrepreneurs worldwide
+              Built with cutting-edge AI and trusted by thousands of
+              entrepreneurs worldwide
             </p>
           </motion.div>
 
@@ -215,11 +220,17 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               >
                 <Card className="wizard-card h-full p-6 border-0 shadow-lg">
                   <CardContent className="p-0">
-                    <div className={`w-12 h-12 ${feature.bgColor} rounded-xl flex items-center justify-center mb-4`}>
+                    <div
+                      className={`w-12 h-12 ${feature.bgColor} rounded-xl flex items-center justify-center mb-4`}
+                    >
                       <feature.icon className={`w-6 h-6 ${feature.color}`} />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {feature.description}
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -240,12 +251,16 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             >
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                 Transform Your
-                <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"> Business Journey</span>
+                <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  {" "}
+                  Business Journey
+                </span>
               </h2>
               <p className="text-xl text-gray-600 mb-8">
-                From idea to exit, our AI-powered platform helps you understand and maximize your startup's value at every stage.
+                From idea to exit, our AI-powered platform helps you understand
+                and maximize your startup's value at every stage.
               </p>
-              
+
               <div className="space-y-4">
                 {benefits.map((benefit, index) => (
                   <motion.div
@@ -269,9 +284,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 transition={{ duration: 0.6, delay: 0.8 }}
                 viewport={{ once: true }}
               >
-                <Button 
+                <Button
                   onClick={onGetStarted}
-                  size="lg" 
+                  size="lg"
                   className="wizard-button-primary px-8 py-4 text-lg font-semibold group"
                 >
                   Get Your Valuation Now
@@ -291,15 +306,19 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-3xl transform rotate-3" />
                 <div className="relative bg-white rounded-3xl p-8 shadow-2xl">
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-gray-900 mb-2">4 Simple Steps</div>
-                    <div className="text-gray-600 mb-6">To Your Accurate Valuation</div>
-                    
+                    <div className="text-4xl font-bold text-gray-900 mb-2">
+                      4 Simple Steps
+                    </div>
+                    <div className="text-gray-600 mb-6">
+                      To Your Accurate Valuation
+                    </div>
+
                     <div className="space-y-4">
                       {[
                         "Quick Company Details",
-                        "Financial Snapshot", 
+                        "Financial Snapshot",
                         "Product & Traction",
-                        "AI-Enhanced Analysis"
+                        "AI-Enhanced Analysis",
                       ].map((step, index) => (
                         <motion.div
                           key={index}
@@ -310,7 +329,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
                           <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full text-white text-sm font-bold flex items-center justify-center">
                             {index + 1}
                           </div>
-                          <span className="text-gray-700 font-medium">{step}</span>
+                          <span className="text-gray-700 font-medium">
+                            {step}
+                          </span>
                         </motion.div>
                       ))}
                     </div>
@@ -335,19 +356,20 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               Ready to Discover Your Startup's True Value?
             </h2>
             <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of entrepreneurs who trust our AI-powered platform for accurate, professional valuations.
+              Join thousands of entrepreneurs who trust our AI-powered platform
+              for accurate, professional valuations.
             </p>
-            
-            <Button 
+
+            <Button
               onClick={onGetStarted}
-              size="lg" 
+              size="lg"
               variant="secondary"
               className="bg-white text-purple-600 hover:bg-gray-50 px-8 py-4 text-lg font-semibold group"
             >
               Start Your Free Valuation
               <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
             </Button>
-            
+
             <div className="mt-6 text-purple-200 text-sm">
               No credit card required • Results in 5 minutes • 100% secure
             </div>
@@ -364,7 +386,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-2xl font-bold mb-4">AI-Powered Startup Valuation</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              AI-Powered Startup Valuation
+            </h3>
             <p className="text-gray-400 mb-6">
               Empowering entrepreneurs with professional-grade valuations
             </p>
